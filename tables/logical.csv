@@ -1,6 +1,0 @@
-Operator,Description
-!,Logical NOT
-&,Element-wise logical AND
-&&,Logical AND
-|,Element-wise logical OR
-||,Logical OR
