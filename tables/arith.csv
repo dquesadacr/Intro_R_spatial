@@ -1,0 +1,8 @@
+Operator,Description
++,Addition
+–,Subtraction
+*,Multiplication
+/,Division
+^ or **,Exponent
+%%,Modulus (Remainder from division)
+%/%,Integer Division
