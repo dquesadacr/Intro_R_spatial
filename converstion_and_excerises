@@ -1,0 +1,8 @@
+Thinking of an exercise that can teach the students programming and not scripting: 
+1. We can start with csv files and time series analysis. 
+    For example, a csv files containing minimum, maximum, and average temperature as well as other climate variable from the area of interest that the student choose. Preferably, hourly or daily data. 
+    Tasks should be: 
+        1. Reading the csv file, 
+        2. Plotting time series with r base and r ggplot2 
+        3. Data aggregation to monthly, seasonally, annually
+        4. Plus trend analysis
