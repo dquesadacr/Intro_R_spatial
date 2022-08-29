@@ -44,7 +44,7 @@ _mailto:{my_email}[{my_name}]_ https://github.com/{my_github}[icon:github[]] +
 image:IHM.png[height=170]{nbsp}{nbsp}{nbsp}image:Logo_TU_Dresden.svg[height=170]
 
 {bl}
-07/10/2021
+19/09/2022
 
 [.columns.is-vcentered]
 
