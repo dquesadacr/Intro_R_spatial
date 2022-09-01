@@ -1,3 +1,14 @@
+
+
+
+We can include one slide in the beginning about data types and dimesion in reality. From my point of view, there is a lack of understanding about data dimensionality
+
+river flow > 1D 
+temperature and precipitation is 1D 
+temperature map is 2D data 
+atmospheric or oceanic or soil data is 3D, lo, lat, and level 
+
+
 Thinking of an exercise that can teach the students programming and not scripting: 
 1. We can start with csv files and time series analysis. 
     For example, a csv files containing minimum, maximum, and average temperature as well as other climate variable from the area of interest that the student choose. Preferably, hourly or daily data. 
@@ -6,3 +17,6 @@ Thinking of an exercise that can teach the students programming and not scriptin
         2. Plotting time series with r base and r ggplot2 
         3. Data aggregation to monthly, seasonally, annually
         4. Plus trend analysis
+
+
+Final Presentation: 

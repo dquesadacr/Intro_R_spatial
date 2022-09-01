@@ -158,6 +158,15 @@ months ago, if persistent, install _v4.0.5_ from https://cloud.r-project.org/bin
 |FALSE|NULL|Inf|NaN|NA
 |NA_integer_|NA_real_|NA_complex_|NA_character_|…
 |===
+== Dimensions of Environmental Data 
+
+* 1D data such as measurement of river flow, temperature, and rainfall, could be presented as time series 
+
+* 2D data such as rainfall measured by satellite or remote sensing. It has longitude (x-axis) and latitude dimensions (y-axis).  
+
+* 3D data, similar to 2D with respect to x and y axes; however depth or elevation is considered. Examples, atmospheric data, oceanic data, and soil profiles.  
+
+Note: all these dimensions can extra include the time axis. 
 
 == Variables and constants
 
