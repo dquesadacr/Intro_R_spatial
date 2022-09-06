@@ -8,10 +8,26 @@ temperature and precipitation is 1D
 temperature map is 2D data 
 atmospheric or oceanic or soil data is 3D, lo, lat, and level 
 
+TASK ONE: 
+    1. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
+    2. use the function get_ts_as_csv to get your csv files (i.e. time series)
+    3. Use the following files to obtain the climatic variables: 
+       1. Surface wind: sfcWind_day_MPI-ESM-MR_historical_r1i1p1_19760101-20051231.nc
+       2. Surface temperature: tas_day_MPI-ESM-MR_historical_r1i1p1_19760101-20051231.nc
+       3. Precipitation: 
+       4. pr_day_MPI-ESM-MR_historical_r1i1p1_19760101-20051231.nc
+    4. Use the emission scenario you would like to analyze. for example, RCP26, RCP45 and finally RCP85.
+    5. Plotting of the time series for different periods, i.e. 2031-2060 & 2071-2100.
+    6. Data Aggregation, to monthly seasonally, and annually is required. 
+    7. You can perform trend analysis or any type of time series analysis you would like.  
+
+TASK TWO: 
+
+
 
 Thinking of an exercise that can teach the students programming and not scripting: 
 1. We can start with csv files and time series analysis. 
-    For example, a csv files containing minimum, maximum, and average temperature as well as other climate variable from the area of interest that the student choose. Preferably, hourly or daily data. 
+    For example, a csv files containing minimum, maximum, and average temperature as well as other climate variable from the area of interest that the student choose. Preferably, daily data. 
     Tasks should be: 
         1. Reading the csv file, 
         2. Plotting time series with r base and r ggplot2 
