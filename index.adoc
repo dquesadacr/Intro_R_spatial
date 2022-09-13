@@ -462,8 +462,10 @@ example(foo)   # show an example of function foo
 ** _tidyverse_ is very useful, will come back to it later
 * `library(tidyverse)` -> loads the package into the active session
 ** Installing the libraries is not enough to use the functions they contain
-* `dplyr::select` -> use the `select` function from `dplyr` without loading +
-the whole library
+* `dplyr::select` -> use the `select` function from `dplyr` without loading the +
+whole library
+** The form `library::function` is considered good practice, particularly +
+when several libraries have the same function name (conflicts)
 
 == Vectors
 
@@ -1791,7 +1793,7 @@ The tidyverse is an opinionated collection of R packages designed for *data scie
 
 * _Tidy_ data is where:
 
-. Every column is variable
+. Every column is a variable
 . Every row is an observation
 . Every cell is a single value
 

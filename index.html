@@ -513,8 +513,9 @@ help(foo)      # help about function foo
 ?foo           # same thing
 apropos("foo") # list all functions containing string foo
 example(foo)   # show an example of function foo</code></pre></div></div></div></section></section>
-<section id="_using_libraries"><h2>Using libraries</h2><div class="slide-content"><div class="ulist"><ul><li><p><code>install.packages("tidyverse")</code> &#8594; install new libraries</p><div class="ulist"><ul><li><p><em>tidyverse</em> is very useful, will come back to it later</p></li></ul></div></li><li><p><code>library(tidyverse)</code> &#8594; loads the package into the active session</p><div class="ulist"><ul><li><p>Installing the libraries is not enough to use the functions they contain</p></li></ul></div></li><li><p><code>dplyr::select</code> &#8594; use the <code>select</code> function from <code>dplyr</code> without loading<br>
-the whole library</p></li></ul></div></div></section>
+<section id="_using_libraries"><h2>Using libraries</h2><div class="slide-content"><div class="ulist"><ul><li><p><code>install.packages("tidyverse")</code> &#8594; install new libraries</p><div class="ulist"><ul><li><p><em>tidyverse</em> is very useful, will come back to it later</p></li></ul></div></li><li><p><code>library(tidyverse)</code> &#8594; loads the package into the active session</p><div class="ulist"><ul><li><p>Installing the libraries is not enough to use the functions they contain</p></li></ul></div></li><li><p><code>dplyr::select</code> &#8594; use the <code>select</code> function from <code>dplyr</code> without loading the<br>
+whole library</p><div class="ulist"><ul><li><p>The form <code>library::function</code> is considered good practice, particularly<br>
+when several libraries have the same function name (conflicts)</p></li></ul></div></li></ul></div></div></section>
 <section><section id="_vectors"><h2>Vectors</h2><div class="slide-content"><div class="ulist"><ul><li><p>Several ways of creating vectors:</p></li></ul></div><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">c("a","B","c")
 [1] "a" "B" "c"
 
