@@ -40,7 +40,8 @@ Basics, _Tidyverse_ and spatial data +
 {bl}
 _mailto:{my_email}[{my_name}]_ https://github.com/{my_github}[icon:github[]] +
 {bl}
-
+_mailto:ahmed.homoudi@tu-dresden.de[Ahmed Homoudi]_ https://github.com/ahmathlete[icon:github[]] +
+{bl}
 image:IHM.png[height=170]{nbsp}{nbsp}{nbsp}image:Logo_TU_Dresden.svg[height=170]
 
 {bl}
@@ -81,7 +82,7 @@ image:IHM.png[height=170]{nbsp}{nbsp}{nbsp}image:Logo_TU_Dresden.svg[height=170]
 ** Vectors
 ** Plotting
 
-== Background
+== Background DQC
 [%step]
 * Studied Civil Engineering at the University of Costa Rica
 ** Worked for 3 years as hydrologist and hydraulic engineer +
@@ -96,7 +97,7 @@ projections for Costa Rica using machine learning (https://rmets.onlinelibrary.w
 Working title: :: _Potential species trajectories under climate change in low mountain ranges (Ore Mountains)_
 
 [%step]
-. Statistical downscaling of local variables with Deep Learning (DL)
+. Statistical downscaling of local variables with Deep Learning (DL, https://gmd.copernicus.org/preprints/gmd-2022-14/[paper])
 * https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5[ERA5] dataset as predictors
 * Observations: https://rekis.hydro.tu-dresden.de/startseite/ueber-uns/[REKIS] gridded daily data, 1 km resolution (1961 -- 2015)
 * Focus on precipitation -> _extreme events_
@@ -116,8 +117,8 @@ Distribution Models_ (SDMs) for the Ore Mountains
 
 . Install image:r-seeklogo.svg[height=45], version _4.x_:
 * Download from https://cloud.r-project.org/
-* I encountered package compatibility issues with _v4.1_ some +
-months ago, if persistent, install _v4.0.5_ from https://cloud.r-project.org/bin/windows/base/old/4.0.5/R-4.0.5-win.exe[here (Windows)]
+* I encountered package compatibility issues with _v4.2_ some +
+months ago, if persistent, install _v4.1.3_ from https://cloud.r-project.org/bin/windows/base/old/4.1.3/R-4.1.3-win.exe[here (Windows)]
 . Install image:RStudio_logo_flat.svg[height=45]
 * Download from https://www.rstudio.com/products/rstudio/download/#download[here]
 . _Swirl_ exercises
