@@ -107,6 +107,27 @@ downscaled climate projections (2015 -- 2100)
 Distribution Models_ (SDMs) for the Ore Mountains
 * Focus on endangered plant species of the region
 
+== Background AH 
+[%step]
+* Studied Civil Engineering at the University of Khartoum, Sudan
+** Have three years experience in working as _Irrigation Engineer_ at the Sudanese Federal Ministry of Water resources, _Resident Engineer_ in the Construction Sector (Sudan), and _Teaching Assistant_ in many sudanese universities 
+* _Hydroscience and Engineering_ masters at the _TU Dresden_
+** Master thesis theme: Objective Identification and Characterization of Double ITCZ in CMIP5 Models and its Effects on Regional Climate Models. (https://doi.org/10.21203/rs.3.rs-1787861/v1[preprint])
+* Research Assistant & PhD Student since October 2021
+
+=== PhD project AH
+
+Working title: :: _Convective Precipitation Systems on the Arabian Peninsula: Current Situation and
+Future Trends_
+
+[%step]
+. Identification and Description of Precipitation systems using Object Based Methods (OBM) and Tracking algorithm 
+* https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDF_06/summary[GPM] dataset as input
+. Linkage of Meso- to Synoptic-Scale Predictors to precipitation Regimes
+* https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5[ERA5] dataset to obtain predictors (i.e. atmospheric conditions) concurrent to precipitation systems. 
+. Dynamically downscale https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip5[CMIP6] models output to obtain convective resolved precipitation projections (i.e. 1 km). 
+* The https://www.mmm.ucar.edu/weather-research-and-forecasting-model[WRF] will be used for downscaling, and OBM will applied to it output to communicate uncertainties. 
+
 === Your turn!
 
 * Background
@@ -466,6 +487,8 @@ example(foo)   # show an example of function foo
 whole library
 ** The form `library::function` is considered good practice, particularly +
 when several libraries have the same function name (conflicts)
+
+NOTE: It is good practice to load one function from the library (i.e. `namespace::function`) to avoid function conflicts. 
 
 == Vectors
 
