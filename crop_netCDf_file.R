@@ -8,7 +8,7 @@ crop_netCDf_file <- function(input_file,
 
   v <- vect(shape_file)
 
-  r_out <- crop(x = r, y = v, mask = TRUE, snap = "in")
+  r_out <- crop(x = r, y = v, mask = TRUE)
 
   writeCDF(r_out,
     filename = output_file,
