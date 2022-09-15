@@ -196,6 +196,7 @@ considered. Examples, atmospheric data, oceanic data, and soil profiles.
 NOTE: All these dimensions can additionally include the time axis. 
 
 == Variables and constants
+image:images/Variables.png[height=10]
 
 * Variables are used to store data, which can be changed afterwards
 * The name given to a variable is known as _identifier_
@@ -1796,6 +1797,31 @@ image::iris.png[height=800]
 
 * Will go in more detail with `ggplot2` -> allows more modifications
 
+== Exercise I
+
+. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
+
+. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
+
+. Loop over the listed files and use the function `get_ts_as_csv` to get your csv files (i.e. time series)
+
+. Load CSV files of your choice and: 
+    .. Plot different types of plots 
+    .. Run some statistical tests. 
+    .. Explore the climate conditions of your area 
+
+. You may do some aggregation, e.g., monthly, seasonally, and annually 
+. You can perform trend analysis or any time series analysis you would like.
+
+[IMPORTANT] 
+.Climate Variables:
+==== 
+
+. sfcWind -> Surface wind [m/s]
+. pr -> Precipitation [kg m-2 s-1]
+. tas -> Surface temperature [k]
+====
+
 == Tidyverse
 
 [quote, tidiverse.org]
@@ -2374,9 +2400,7 @@ image::gg_facet_1.png[height=650]
 * There is a great amount of packages to work with spatial data
 * Might not be as user friendly as QGIS, but really pays off to learn
 * Packages needed:
-** `rgdal`
-** `raster`
-** `sp`
+** `terra`
 ** `sf`
 * Some of those packages need installation of other software outside of R
 ** This might be time consuming...
@@ -2393,33 +2417,35 @@ image::gg_facet_1.png[height=650]
 --
 [source,R]
 ----
-library(raster)
+library(terra)
 
 # Creating a raster from a matrix
-r1 <- raster(matrix(rnorm(19*13), nrow = 19),
-             xmn=5, xmx=15, ymn=-5, ymx=10,
-             crs = sp::CRS(SRS_string = "EPSG:4326"))
+r1 <- rast(matrix(rnorm(19*13), nrow = 19), crs = "EPSG:4326")
+# define extent 
+ext(r1)<-c(xmin=5, xmax=15, ymin=-5, ymax=10)
+
 r1
-class      : RasterLayer
-dimensions : 19, 13, 247  (nrow, ncol, ncell)
-resolution : 0.7692308, 0.7894737  (x, y)
-extent     : 5, 15, -5, 10  (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +datum=WGS84 +no_defs
-source     : memory
-names      : layer
-values     : -2.990121, 2.558331  (min, max)
+class       : SpatRaster 
+dimensions  : 19, 13, 1  (nrow, ncol, nlyr)
+resolution  : 0.7692308, 0.7894737  (x, y)
+extent      : 5, 15, -5, 10  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+source      : memory 
+name        :     lyr.1 
+min value   : -2.777259 
+max value   :  2.850702 
 
 plot(r1, main = "Raster made from a matrix")
 # Plot the center of the pixels
-points(coordinates(r1), pch=3, cex=0.5)
+points(crds(r1), pch=3, cex=0.5)
 ----
-* For other sources check `?raster`
+* For other sources check `?terra`
 
 --
 
 [.column]
 --
-image::matrix_raster.png[height=900]
+image::matrix_raster_terra.png[height=900]
 --
 
 === Read raster data

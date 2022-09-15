@@ -71,3 +71,37 @@ source      : deutschland_dgm.asc
 name        : deutschland_dgm 
 min value   :         -178.46 
 max value   :         2770.35 
+
+# PDF slide 87 ------------------------------------------------------------
+
+sqrt(de_dem)
+class       : SpatRaster 
+dimensions  : 910, 720, 1  (nrow, ncol, nlyr)
+resolution  : 1000, 1000  (x, y)
+extent      : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+coord. ref. : Germany_Zone_4 (ESRI:31494) 
+source      : memory 
+name        : deutschland_dgm 
+min value   :         0.00000 
+max value   :        52.63412 
+de_dem + de_dem*4 # Need to have same dimensions
+class       : SpatRaster 
+dimensions  : 910, 720, 1  (nrow, ncol, nlyr)
+resolution  : 1000, 1000  (x, y)
+extent      : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+coord. ref. : Germany_Zone_4 (ESRI:31494) 
+source      : memory 
+name        : deutschland_dgm 
+min value   :         -892.30 
+max value   :        13851.75 
+
+# PDF slide 88------------------------------------------------------------
+par(mfrow=c(1,3))
+terra::hist(de_dem, main="Distribution of elevation \n values",
+             breaks=40,maxcell=1000000)
+terra::boxplot(de_dem, ylab= "Elevation", main = "Boxplot")
+terra::plot(de_dem, main = "Basic plot",
+            col = RColorBrewer::brewer.pal(7, "BrBG"), 
+            range = c(0, 2500),
+            ylim = ext(de_dem)[c(3,4)])
+list.files()

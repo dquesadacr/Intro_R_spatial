@@ -1,0 +1,83 @@
+== Spatial data in image:r-seeklogo.svg[height=45]
+
+[%step]
+* There is a great amount of packages to work with spatial data
+* Might not be as user friendly as QGIS, but really pays off to learn
+* Packages needed:
+** `rgdal`
+** `raster`
+** `sp`
+** `sf`
+* Some of those packages need installation of other software outside of R
+** This might be time consuming...
+* Both _vector_ and _raster_ data can be:
+** Read to R
+** Modified
+** Created from scratch
+** Saved into desired format
+
+[.columns.is-vcentered]
+== _Rasters_
+
+[.column]
+--
+[source,R]
+----
+library(raster)
+
+# Creating a raster from a matrix
+r1 <- raster(matrix(rnorm(19*13), nrow = 19),
+             xmn=5, xmx=15, ymn=-5, ymx=10,
+             crs = sp::CRS(SRS_string = "EPSG:4326"))
+r1
+class      : RasterLayer
+dimensions : 19, 13, 247  (nrow, ncol, ncell)
+resolution : 0.7692308, 0.7894737  (x, y)
+extent     : 5, 15, -5, 10  (xmin, xmax, ymin, ymax)
+crs        : +proj=longlat +datum=WGS84 +no_defs
+source     : memory
+names      : layer
+values     : -2.990121, 2.558331  (min, max)
+
+plot(r1, main = "Raster made from a matrix")
+# Plot the center of the pixels
+points(coordinates(r1), pch=3, cex=0.5)
+----
+* For other sources check `?raster`
+
+--
+
+[.column]
+--
+image::matrix_raster.png[height=900]
+--
+=== Read raster data
+
+[source,R]
+----
+# Run these 4 lines in this order to install the "hires" version of "rnaturalearth"
+install.packages("Rtools")
+install.packages("devtools")
+devtools::install_github("ropenscilabs/rnaturalearth")
+devtools::install_github("ropenscilabs/rnaturalearthhires")
+
+library(sf)
+library(raster)
+library(rgdal)
+library(rnaturalearth)
+
+setwd("/home/dqc/Documents/PhD/Students/R_course/FRM/spatial/")
+
+de_dem <- raster("deutschland_dgm.asc")
+crs(de_dem) <- sp::CRS(SRS_string = "ESRI:31494")
+
+print(de_dem)
+
+class      : RasterLayer
+dimensions : 910, 720, 655200  (nrow, ncol, ncell)
+resolution : 1000, 1000  (x, y)
+extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
+source     : /mnt/Linux/Documents/PhD/Data/Sachsen/deutschland_dgm.asc
+names      : deutschland_dgm
+----
