@@ -81,3 +81,213 @@ crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bess
 source     : /mnt/Linux/Documents/PhD/Data/Sachsen/deutschland_dgm.asc
 names      : deutschland_dgm
 ----
+
+
+[source,R]
+-----
+cellStats(de_dem, range) # min and max
+[1] -178.46 2770.35
+
+cellStats(de_dem, mean)
+[1] 312.5505
+
+cellStats(de_dem, median)
+[1] 256.21
+
+de_dem <- setMinMax(de_dem) # add range permanently to raster
+print(de_dem)
+
+class      : RasterLayer
+dimensions : 910, 720, 655200  (nrow, ncol, ncell)
+resolution : 1000, 1000  (x, y)
+extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
+source     : /mnt/Linux/Documents/PhD/Students/R_course/FRM/spatial/deutschland_dgm.asc
+names      : deutschland_dgm
+values     : -178.46, 2770.35  (min, max)
+
+#slide 87 pdf 
+sqrt(de_dem)
+class      : RasterLayer
+dimensions : 910, 720, 655200  (nrow, ncol, ncell)
+resolution : 1000, 1000  (x, y)
+extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
+source     : memory
+names      : layer
+values     : 0, 52.63412  (min, max)
+
+de_dem + de_dem*4 # Need to have same dimensions
+class      : RasterLayer
+dimensions : 910, 720, 655200  (nrow, ncol, ncell)
+resolution : 1000, 1000  (x, y)
+extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
+source     : memory
+names      : layer
+values     : -892.3, 13851.75  (min, max)
+
+PDF slide 89 
+
+dem_repro <- projectRaster(de_dem,
+    crs = sp::CRS(SRS_string = "EPSG:4326"))
+dem_repro
+
+class      : RasterLayer
+dimensions : 944, 802, 757088  (nrow, ncol, ncell)
+resolution : 0.0143, 0.00899  (x, y)
+extent     : 4.545173, 16.01377, 46.97347, 55.46003
+             (xmin, xmax, ymin, ymax)
+crs        : +proj=longlat +datum=WGS84 +no_defs
+source     : memory
+names      : deutschland_dgm
+values     : -145.4618, 2675.694  (min, max)
+
+png("../images/reproj_dem.png", width = 800,
+    height= 800, res = 150)
+# Changing colors
+raster::plot(dem_repro, col= terrain.colors(12))
+dev.off()
+
+#pdf 90 
+writeRaster(x = dem_repro, "dem_repro.tif", format = "GTiff")
+
+
+#pdf 91
+class      : RasterBrick
+dimensions : 944, 802, 757088, 6  (nrow, ncol, ncell, nlayers)
+resolution : 0.0143, 0.00899  (x, y)
+extent     : 4.545173, 16.01377, 46.97347, 55.46003  (xmin, xmax, ymin, ymax)
+crs        : +proj=longlat +datum=WGS84 +no_defs
+source     : memory
+names      :           tri,           tpi,     roughness,         slope,        aspect,       flowdir
+min values :  0.000000e+00, -3.915855e+02,  0.000000e+00,  0.000000e+00,  1.738140e-04,  1.000000e+00
+max values :     518.62309,     405.68581,    1531.81458,      31.38371,     359.99787,     128.00000
+[1] "RasterBrick"
+attr(,"package")
+[1] "raster"
+
+#slide 93
+# Bricks can also be created:
+brick(terrain_all$roughness, terrain_all$TPI)
+class      : RasterBrick
+dimensions : 944, 802, 757088, 2
+             (nrow, ncol, ncell, nlayers)
+resolution : 0.0143, 0.00899  (x, y)
+extent     : 4.545173, 16.01377, 46.97347, 55.46003
+             (xmin, xmax, ymin, ymax)
+crs        : +proj=longlat +datum=WGS84 +no_defs
+source     : memory
+names      : roughness,       tpi
+min values :    0.0000, -391.5855
+max values : 1531.8146,  405.6858
+
+# pdf slide 94
+extent(dem_repro)
+class      : Extent
+xmin       : 4.545173
+xmax       : 16.01377
+ymin       : 46.97347
+ymax       : 55.46003
+
+crop_extent <- extent(c(8,12,50,54))
+cropped_dem <- crop(dem_repro, crop_extent)
+
+plot(cropped_dem, main= "Cropped to extent")
+plot(bundes, add=TRUE)
+
+masked_dem <- mask(dem_repro, bundes)
+plot(masked_dem, main= "Masked to polygon")
+----
+
+[.column]
+image::crop_mask.png[height=850]
+
+# pdf slide 95 
+* Read with `readOGR()` from `rgdal` package
+** Resulting object is of class `sp`
+** Works with _base-R_ plotting
+
+ibrary(rgdal)
+kreis_ogr <- readOGR("./spatial/kreis.gpkg")
+class(kreis_ogr)
+[1] "SpatialPolygonsDataFrame"
+attr(,"package")
+[1] "sp"
+plot(kreis_ogr, main = "Default sp plot")
+
+# pdf 96
+=== Transformations
+
+[.column]
+--
+* From `sp` to another projection
+
+[source,R]
+----
+library(tidyverse)
+kreis_ogrT <- spTransform(kreis_ogr,
+    sp::CRS(SRS_string = "EPSG:4326"))
+
+plot(dem_repro, xlim = c(11.5,15.5),
+     ylim=c(50,52))
+plot(kreis_ogrT, add=TRUE)
+----
+image::dem_kreis_ogr.png[width=500]
+--
+
+[.column]
+--
+* From `sf` to another projection
+
+[source,R]
+----
+kreis_sfT <- st_transform(kreis_sf,
+    sp::CRS(SRS_string = "EPSG:4326"))
+
+plot(dem_repro, xlim = c(11.5,15.5),
+     ylim=c(50,52))
+plot(kreis_sfT, add=TRUE, col=NA)
+# Try without col=NA
+----
+image::dem_kreis_sf.png[width=500]
+--
+
+[.column]
+--
+* From `sp` to `sf`
+* Note that the class is not exactly the same but the content is:
+
+[source,R]
+----
+kreis_sf_2 <- st_as_sf(kreis_ogr)
+class(kreis_sf_2)
+[1] "sf"         "data.frame"
+
+kreis_sf == kreis_sf_2
+      SCHLUESSEL KREIS geom
+ [1,]       TRUE  TRUE TRUE
+ [2,]       TRUE  TRUE TRUE
+ [3,]       TRUE  TRUE TRUE
+ [4,]       TRUE  TRUE TRUE
+ [5,]       TRUE  TRUE TRUE
+ [6,]       TRUE  TRUE TRUE
+ [7,]       TRUE  TRUE TRUE
+ [8,]       TRUE  TRUE TRUE
+ [9,]       TRUE  TRUE TRUE
+[10,]       TRUE  TRUE TRUE
+[11,]       TRUE  TRUE TRUE
+[12,]       TRUE  TRUE TRUE
+[13,]       TRUE  TRUE TRUE
+----
+
+#pdf slide 97
+
+kreis_ogrSub <- subset(kreis_ogrT,
+    str_detect(kreis_ogrT$KREIS,"Kreisfreie"))
+
+plot(dem_repro, col= terrain.colors(12),
+     xlim = c(11.5,15.5), ylim=c(50,52),
+     main = "Main cities in Sachsen from sp")
+plot(kreis_ogrSub, add=TRUE)
+-----

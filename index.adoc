@@ -126,7 +126,7 @@ Future Trends_
 . Linkage of Meso- to Synoptic-Scale Predictors to precipitation Regimes
 * https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5[ERA5] dataset to obtain predictors (i.e. atmospheric conditions) concurrent to precipitation systems. 
 . Dynamically downscale https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip5[CMIP6] models output to obtain convective resolved precipitation projections (i.e. 1 km). 
-* The https://www.mmm.ucar.edu/weather-research-and-forecasting-model[WRF] will be used for downscaling, and OBM will applied to it output to communicate uncertainties. 
+* The https://www.mmm.ucar.edu/weather-research-and-forecasting-model[WRF] will be used for downscaling, and OBM will applied to its output to communicate uncertainties. 
 
 === Your turn!
 
@@ -196,7 +196,6 @@ considered. Examples, atmospheric data, oceanic data, and soil profiles.
 NOTE: All these dimensions can additionally include the time axis. 
 
 == Variables and constants
-image:images/Variables.png[height=10]
 
 * Variables are used to store data, which can be changed afterwards
 * The name given to a variable is known as _identifier_
@@ -1797,31 +1796,6 @@ image::iris.png[height=800]
 
 * Will go in more detail with `ggplot2` -> allows more modifications
 
-== Exercise I
-
-. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
-
-. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
-
-. Loop over the listed files and use the function `get_ts_as_csv` to get your csv files (i.e. time series)
-
-. Load CSV files of your choice and: 
-    .. Plot different types of plots 
-    .. Run some statistical tests. 
-    .. Explore the climate conditions of your area 
-
-. You may do some aggregation, e.g., monthly, seasonally, and annually 
-. You can perform trend analysis or any time series analysis you would like.
-
-[IMPORTANT] 
-.Climate Variables:
-==== 
-
-. sfcWind -> Surface wind [m/s]
-. pr -> Precipitation [kg m-2 s-1]
-. tas -> Surface temperature [k]
-====
-
 == Tidyverse
 
 [quote, tidiverse.org]
@@ -2459,50 +2433,51 @@ devtools::install_github("ropenscilabs/rnaturalearth")
 devtools::install_github("ropenscilabs/rnaturalearthhires")
 
 library(sf)
-library(raster)
-library(rgdal)
+library(terra)
 library(rnaturalearth)
 
 setwd("/home/dqc/Documents/PhD/Students/R_course/FRM/spatial/")
 
-de_dem <- raster("deutschland_dgm.asc")
-crs(de_dem) <- sp::CRS(SRS_string = "ESRI:31494")
+de_dem <- rast("deutschland_dgm.asc")
+crs(de_dem) <-  "ESRI:31494"
 
 print(de_dem)
 
-class      : RasterLayer
-dimensions : 910, 720, 655200  (nrow, ncol, ncell)
-resolution : 1000, 1000  (x, y)
-extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
-crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
-source     : /mnt/Linux/Documents/PhD/Data/Sachsen/deutschland_dgm.asc
-names      : deutschland_dgm
+class       : SpatRaster 
+dimensions  : 910, 720, 1  (nrow, ncol, nlyr)
+resolution  : 1000, 1000  (x, y)
+extent      : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+coord. ref. : Germany_Zone_4 (ESRI:31494) 
+source      : deutschland_dgm.asc 
+name        : deutschland_dgm 
 ----
 
 === Exploring the raster
 
 [source,R]
 ----
-cellStats(de_dem, range) # min and max
-[1] -178.46 2770.35
-
-cellStats(de_dem, mean)
-[1] 312.5505
-
-cellStats(de_dem, median)
+global(de_dem, 'range', na.rm=TRUE) # min and max
+                range     max
+deutschland_dgm -178.46 2770.35
+global(de_dem, 'mean', na.rm=TRUE)
+                  mean
+deutschland_dgm 312.5505
+# if #1 didnot work use #2
+global(de_dem, fun='median', na.rm=TRUE) #1
+median(values(de_dem), na.rm = TRUE)#2
 [1] 256.21
 
-de_dem <- setMinMax(de_dem) # add range permanently to raster
+de_dem <- setMinMax(de_dem) # add range permanently to SpatRaster
 print(de_dem)
-
-class      : RasterLayer
-dimensions : 910, 720, 655200  (nrow, ncol, ncell)
-resolution : 1000, 1000  (x, y)
-extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
-crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
-source     : /mnt/Linux/Documents/PhD/Students/R_course/FRM/spatial/deutschland_dgm.asc
-names      : deutschland_dgm
-values     : -178.46, 2770.35  (min, max)
+class       : SpatRaster 
+dimensions  : 910, 720, 1  (nrow, ncol, nlyr)
+resolution  : 1000, 1000  (x, y)
+extent      : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+coord. ref. : Germany_Zone_4 (ESRI:31494) 
+source      : deutschland_dgm.asc 
+name        : deutschland_dgm 
+min value   :         -178.46 
+max value   :         2770.35 
 ----
 
 === Raster math
@@ -2510,24 +2485,26 @@ values     : -178.46, 2770.35  (min, max)
 [source,R]
 ----
 sqrt(de_dem)
-class      : RasterLayer
-dimensions : 910, 720, 655200  (nrow, ncol, ncell)
-resolution : 1000, 1000  (x, y)
-extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
-crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
-source     : memory
-names      : layer
-values     : 0, 52.63412  (min, max)
+class       : SpatRaster 
+dimensions  : 910, 720, 1  (nrow, ncol, nlyr)
+resolution  : 1000, 1000  (x, y)
+extent      : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+coord. ref. : Germany_Zone_4 (ESRI:31494) 
+source      : memory 
+name        : deutschland_dgm 
+min value   :         0.00000 
+max value   :        52.63412 
 
 de_dem + de_dem*4 # Need to have same dimensions
-class      : RasterLayer
-dimensions : 910, 720, 655200  (nrow, ncol, ncell)
-resolution : 1000, 1000  (x, y)
-extent     : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
-crs        : +proj=tmerc +lat_0=0 +lon_0=12 +k=1 +x_0=4500000 +y_0=0 +ellps=bessel +units=m +no_defs
-source     : memory
-names      : layer
-values     : -892.3, 13851.75  (min, max)
+class       : SpatRaster 
+dimensions  : 910, 720, 1  (nrow, ncol, nlyr)
+resolution  : 1000, 1000  (x, y)
+extent      : 4030000, 4750000, 5230000, 6140000  (xmin, xmax, ymin, ymax)
+coord. ref. : Germany_Zone_4 (ESRI:31494) 
+source      : memory 
+name        : deutschland_dgm 
+min value   :         -892.30 
+max value   :        13851.75 
 ----
 
 === Plotting with _raster_ package
@@ -2543,7 +2520,7 @@ raster::plot(de_dem, main = "Basic plot")
 
 [.columns.is-vcentered]
 
-image::histbox_dem.png[width=1800]
+image::histbox_dem_terra.png[width=1800,height=800]
 
 [.columns.is-vcentered]
 === Reprojecting rasters
@@ -2552,31 +2529,31 @@ image::histbox_dem.png[width=1800]
 --
 [source,R]
 ----
-dem_repro <- projectRaster(de_dem,
-    crs = sp::CRS(SRS_string = "EPSG:4326"))
+dem_repro <- terra::project(de_dem,
+                           "+proj=longlat +datum=WGS84")
 dem_repro
 
-class      : RasterLayer
-dimensions : 944, 802, 757088  (nrow, ncol, ncell)
-resolution : 0.0143, 0.00899  (x, y)
-extent     : 4.545173, 16.01377, 46.97347, 55.46003
-             (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +datum=WGS84 +no_defs
-source     : memory
-names      : deutschland_dgm
-values     : -145.4618, 2675.694  (min, max)
+class       : SpatRaster 
+dimensions  : 732, 901, 1  (nrow, ncol, nlyr)
+resolution  : 0.01127346, 0.01128598  (x, y)
+extent      : 5.499419, 15.6568, 47.03692, 55.29826  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+source      : memory 
+name        : deutschland_dgm 
+min value   :        -138.226 
+max value   :        2689.770 
 
-png("../images/reproj_dem.png", width = 800,
+png("../images/reproj_dem_terra.png", width = 800,
     height= 800, res = 150)
-# Changing colors
-raster::plot(dem_repro, col= terrain.colors(12))
+
+terra::plot(dem_repro, col= terrain.colors(12))
 dev.off()
 ----
 --
 
 [.column]
 --
-image::reproj_dem.png[height=800]
+image::reproj_dem_terra.png[height=800]
 --
 
 === Save rasters
@@ -2600,7 +2577,9 @@ image::reproj_dem.png[height=800]
 
 [source,R]
 ----
-writeRaster(x = dem_repro, "dem_repro.tif", format = "GTiff")
+writeRaster(x = dem_repro, 
+            "dem_repro_terra.tif",
+            overwrite = TRUE)
 ----
 
 === Calculating terrain characteristics
@@ -2620,38 +2599,39 @@ writeRaster(x = dem_repro, "dem_repro.tif", format = "GTiff")
 [source,R]
 ----
 terrain_all <- terrain(dem_repro, unit='degrees',
-                       opt=c("slope", "aspect", "TPI",
+                       v=c("slope", "aspect", "TPI",
                              "TRI", "roughness", "flowdir"))
-class      : RasterBrick
-dimensions : 944, 802, 757088, 6  (nrow, ncol, ncell, nlayers)
-resolution : 0.0143, 0.00899  (x, y)
-extent     : 4.545173, 16.01377, 46.97347, 55.46003  (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +datum=WGS84 +no_defs
-source     : memory
-names      :           tri,           tpi,     roughness,         slope,        aspect,       flowdir
-min values :  0.000000e+00, -3.915855e+02,  0.000000e+00,  0.000000e+00,  1.738140e-04,  1.000000e+00
-max values :     518.62309,     405.68581,    1531.81458,      31.38371,     359.99787,     128.00000
+class       : SpatRaster 
+dimensions  : 732, 901, 6  (nrow, ncol, nlyr)
+resolution  : 0.01127346, 0.01128598  (x, y)
+extent      : 5.499419, 15.6568, 47.03692, 55.29826  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+source      : memory 
+names       :   slope,       aspect,       TPI,      TRI, roughness, flowdir 
+min values  :  0.0000, 7.219100e-05, -373.8375,   0.0000,     0.000,       1 
+max values  : 30.8288, 3.599996e+02,  453.8708, 475.6112,  1472.003,     128 
 
-class(terrain_all)
-[1] "RasterBrick"
+class(terrain_all)[1] "SpatRaster"
 attr(,"package")
-[1] "raster"
+[1] "terra"
+
 plot(terrain_all)
 ----
 
-=== Visualizing _bricks_
+//=== Visualizing _bricks_
+=== Visualizing _rasters_
 
-image::terrain.png[width=1400]
+image::terrain_terra.png[width=1400,height=800]
 
 [.columns.is-vcentered]
-=== Selecting layer of _brick_ and adding plots
+=== Selecting layer of _SpatRaster_ and adding plots
 
 [source,R]
 ----
 library(rnaturalearth)
 bundes <- ne_states(country="germany") # Obtain borders
 
-plot(terrain_all$tri)
+plot(terrain_all$TRI)
 plot(bundes, add=TRUE)
 
 class(bundes) # Notice the class of the object
@@ -2659,22 +2639,21 @@ class(bundes) # Notice the class of the object
 attr(,"package")
 [1] "sp"
 
-# Bricks can also be created:
-brick(terrain_all$roughness, terrain_all$tpi)
-class      : RasterBrick
-dimensions : 944, 802, 757088, 2
-             (nrow, ncol, ncell, nlayers)
-resolution : 0.0143, 0.00899  (x, y)
-extent     : 4.545173, 16.01377, 46.97347, 55.46003
-             (xmin, xmax, ymin, ymax)
-crs        : +proj=longlat +datum=WGS84 +no_defs
-source     : memory
-names      : roughness,       tpi
-min values :    0.0000, -391.5855
-max values : 1531.8146,  405.6858
+# SpatRaster can also be created:
+c(terrain_all$roughness, terrain_all$TPI)
+class       : SpatRaster 
+dimensions  : 732, 901, 2  (nrow, ncol, nlyr)
+resolution  : 0.01127346, 0.01128598  (x, y)
+extent      : 5.499419, 15.6568, 47.03692, 55.29826  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+sources     : memory  
+              memory  
+names       : roughness,       TPI 
+min values  :     0.000, -373.8375 
+max values  :  1472.003,  453.8708 
 ----
 
-image::tri_bundes.png[height=900]
+image::tri_bundes_terra.png[height=900]
 
 [.columns.is-vcentered]
 === Extent, crop and mask
@@ -2682,25 +2661,25 @@ image::tri_bundes.png[height=900]
 [.column]
 [source,R]
 ----
-extent(dem_repro)
+ext(dem_repro)
 class      : Extent
 xmin       : 4.545173
 xmax       : 16.01377
 ymin       : 46.97347
 ymax       : 55.46003
 
-crop_extent <- extent(c(8,12,50,54))
+crop_extent <- ext(c(8,12,50,54))
 cropped_dem <- crop(dem_repro, crop_extent)
 
 plot(cropped_dem, main= "Cropped to extent")
 plot(bundes, add=TRUE)
 
-masked_dem <- mask(dem_repro, bundes)
+masked_dem <- mask(dem_repro, vect(bundes))
 plot(masked_dem, main= "Masked to polygon")
 ----
 
 [.column]
-image::crop_mask.png[height=850]
+image::crop_mask_terra.png[height=850,width=750]
 
 //.is-vcentered
 [.columns]
@@ -2708,22 +2687,22 @@ image::crop_mask.png[height=850]
 
 [.column]
 --
-* Read with `readOGR()` from `rgdal` package
-** Resulting object is of class `sp`
+* Read with `vect()` from `terra` package
+** Resulting object is of class `SpatVector`
 ** Works with _base-R_ plotting
 
 [source,R]
 ----
-library(rgdal)
-kreis_ogr <- readOGR("./spatial/kreis.gpkg")
+library(terra)
+kreis_ogr <- vect("./spatial/kreis.gpkg")
 class(kreis_ogr)
-[1] "SpatialPolygonsDataFrame"
+[1] "SpatVector"
 attr(,"package")
-[1] "sp"
+[1] "terra"
 
 plot(kreis_ogr, main = "Default sp plot")
 ----
-image::kreis_ogr.png[height=550]
+image::kreis_ogr_terra.png[height=550]
 --
 
 [.column]
@@ -2750,19 +2729,18 @@ image::kreis_sf.png[height=450]
 
 [.column]
 --
-* From `sp` to another projection
+* From `terra` to another projection
 
 [source,R]
 ----
 library(tidyverse)
-kreis_ogrT <- spTransform(kreis_ogr,
-    sp::CRS(SRS_string = "EPSG:4326"))
+kreis_ogrT <- project(kreis_ogr,"EPSG:4326")
 
 plot(dem_repro, xlim = c(11.5,15.5),
      ylim=c(50,52))
 plot(kreis_ogrT, add=TRUE)
 ----
-image::dem_kreis_ogr.png[width=500]
+image::dem_kreis_ogr_terra.png[width=500]
 --
 
 [.column]
@@ -2784,7 +2762,7 @@ image::dem_kreis_sf.png[width=500]
 
 [.column]
 --
-* From `sp` to `sf`
+* From `terra` to `sf`
 * Note that the class is not exactly the same but the content is:
 
 [source,R]
@@ -2820,15 +2798,14 @@ kreis_sf == kreis_sf_2
 
 [source,R]
 ----
-kreis_ogrSub <- subset(kreis_ogrT,
-    str_detect(kreis_ogrT$KREIS,"Kreisfreie"))
-
+kreis_ogrSub <- kreis_ogrT[grep("Kreisfreie",  kreis_ogrT$KREIS)]
+                           
 plot(dem_repro, col= terrain.colors(12),
      xlim = c(11.5,15.5), ylim=c(50,52),
-     main = "Main cities in Sachsen from sp")
+     main = "Main cities in Sachsen from terra")
 plot(kreis_ogrSub, add=TRUE)
 ----
-image::dem_kreis_ogr_sub.png[width=600]
+image::dem_kreis_ogr_sub_terra.png[width=600]
 --
 
 [.column]
@@ -2895,7 +2872,7 @@ image::modified_geom.png[]
 
 === Creating vectors
 
-* It can be done with both `sp` and `sf` packages
+* It can be done with both `terra` and `sf` packages
 * Still, due to its simplicity and contemporarity, focus will be on `sf`
 * As seen before, `sf` objects are _tibble_ like structure +
 with a `geom` column which contains a _list_
@@ -3031,12 +3008,90 @@ be done with spatial data
 ** Voronoi polygons
 ** Extreme events distribution fit and analysis
 
+== Exercise I
+
+//. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
+
+//. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
+
+. List all CSV files using `list.files.` Check the options `full.names` & `recursive`
+
+. Loop over the listed files and read them as dataframes or time series
+
+. Pick CSV files of your choice and: 
+    .. Plot different types of plots 
+    .. Run some statistical tests. 
+    .. Explore the climate conditions of your area 
+
+. You may do some aggregation, e.g., monthly, seasonally, and annually 
+. You can perform trend analysis or any time series analysis you would like.
+
+. You may convert the variables to common units such as Celsius or mm/day 
+
+[IMPORTANT] 
+.Climate Variables:
+==== 
+
+. sfcWind -> Surface wind [m/s]
+. pr -> Precipitation [kg m-2 s-1]
+. tas -> Surface temperature [k]
+====
+== Exercise II
+
+//. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
+
+//. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
+
+. List all CSV files using `list.files.` Check the options `full.names` & `recursive`
+
+. Loop over the listed files and read them as dataframes or time series
+
+. Pick CSV files of your choice and: 
+    .. Plot different types of plots 
+    .. Run some statistical tests. 
+    .. Explore the climate conditions of your area 
+
+. You may do some aggregation, e.g., monthly, seasonally, and annually 
+. You can perform trend analysis or any time series analysis you would like.
+
+. You may convert the variables to common units such as Celsius or mm/day 
+
+[IMPORTANT] 
+.Climate Variables:
+==== 
+
+. sfcWind -> Surface wind [m/s]
+. pr -> Precipitation [kg m-2 s-1]
+. tas -> Surface temperature [k]
+====
+
+== Exercise III
+
+. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
+
+. List all netCDF files in `final task` using `list.files.` Check the options `full.names` & `recursive`
+
+. Access the files using `terra` and obtain the vertical profiles for your location. 
+
+. The netCDF files include variables such u and v wind components + 
+specific humidity (hus), and temperature (ta). 
+
+. You may read all files and combine the information in on data frame for each variable, e.g., hus
+
+. Plot four plots for each variable and compare the different periods and scenarios. 
+
+. You may want to calculate wind speed and wind direction from u and v. +
+Don't hesitate to do it! 
+
+. You may convert the variables to common units such as Celsius
+
 == Homework
 
 [.col2]
 * Groups of two
-* Analyse a data set of your interest
-** Gapminder (also from the website), worldcities, rnaturalearth or similar, there is a lot of open data online
+* Analyse the data provided and generally follow the provided exercises
+//* Analyse a data set of your interest
+//** Gapminder (also from the website), worldcities, rnaturalearth or similar, there is a lot of open data online
 ** Choose a region/country of interest
 ** Wrangle to analyse trends inside the data
 ** If possible, do some statistical tests or regression, interpret it
