@@ -56,6 +56,7 @@ image:IHM.png[height=170]{nbsp}{nbsp}{nbsp}image:Logo_TU_Dresden.svg[height=170]
 [.column]
 [%step]
 //[.west]
+* Course details
 * Introduce ourselves
 ** Background
 ** Experience -- expectations
@@ -82,7 +83,29 @@ image:IHM.png[height=170]{nbsp}{nbsp}{nbsp}image:Logo_TU_Dresden.svg[height=170]
 ** Vectors
 ** Plotting
 
-== Background DQC
+== Course details
+
+[%step]
+* You can opt for a certificate of participation 
+* Requisites:
+[%step]
+** Assist to all lessons (sign attendence sheet daily)
+*** Absence justified only with _sick certificate_ or +
+major issue
+** Do all exercises and final presentation
+*** You can work in couples
+
+=== Slack channel
+
+* Join the _Slack_ channel
+* You can post questions, code, examples, etc
+* Discussions are encouraged!
+* Scan the following QR code to join
+
+image::GROUNDWATCH_SLACK.png[width=35%]
+// image::FRM_slack.png[width=35%]
+
+== Background DQ
 [%step]
 * Studied Civil Engineering at the University of Costa Rica
 ** Worked for 3 years as hydrologist and hydraulic engineer +
@@ -92,7 +115,7 @@ for hydropower projects
 projections for Costa Rica using machine learning (https://rmets.onlinelibrary.wiley.com/doi/abs/10.1002/joc.6616[paper])
 * Doctoral candidate since 2020, _ESF_ scholarship
 
-=== PhD project summary
+=== PhD project DQ
 
 Working title: :: _Potential species trajectories under climate change in low mountain ranges (Ore Mountains)_
 
@@ -102,17 +125,20 @@ Working title: :: _Potential species trajectories under climate change in low mo
 * Observations: https://rekis.hydro.tu-dresden.de/startseite/ueber-uns/[REKIS] gridded daily data, 1 km resolution (1961 -- 2015)
 * Focus on precipitation -> _extreme events_
 . Use https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip5[CMIP5] -- https://euro-cordex.net/[EURO-CORDEX] model output to obtain an ensemble of +
-downscaled climate projections (2015 -- 2100)
+downscaled climate projections (2005 -- 2100)
 . Implement the generated high-resolution climate data in _Species +
 Distribution Models_ (SDMs) for the Ore Mountains
 * Focus on endangered plant species of the region
 
-== Background AH 
+=== Background AH 
 [%step]
 * Studied Civil Engineering at the University of Khartoum, Sudan
-** Have three years experience in working as _Irrigation Engineer_ at the Sudanese Federal Ministry of Water resources, _Resident Engineer_ in the Construction Sector (Sudan), and _Teaching Assistant_ in many sudanese universities 
+** Have three years experience in working as _Irrigation Engineer_ at the Sudanese +
+Federal Ministry of Water resources, _Resident Engineer_ in the Construction Sector +
+(Sudan), and _Teaching Assistant_ in many sudanese universities 
 * _Hydroscience and Engineering_ masters at the _TU Dresden_
-** Master thesis theme: Objective Identification and Characterization of Double ITCZ in CMIP5 Models and its Effects on Regional Climate Models. (https://doi.org/10.21203/rs.3.rs-1787861/v1[preprint])
+** Master thesis theme: Objective Identification and Characterization of Double ITCZ +
+in CMIP5 Models and its Effects on Regional Climate Models. (https://doi.org/10.21203/rs.3.rs-1787861/v1[preprint])
 * Research Assistant & PhD Student since October 2021
 
 === PhD project AH
@@ -121,12 +147,16 @@ Working title: :: _Convective Precipitation Systems on the Arabian Peninsula: Cu
 Future Trends_
 
 [%step]
-. Identification and Description of Precipitation systems using Object Based Methods (OBM) and Tracking algorithm 
+. Identification and Description of Precipitation systems using Object Based Methods (OBM) +
+and Tracking algorithm 
 * https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDF_06/summary[GPM] dataset as input
 . Linkage of Meso- to Synoptic-Scale Predictors to precipitation Regimes
-* https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5[ERA5] dataset to obtain predictors (i.e. atmospheric conditions) concurrent to precipitation systems. 
-. Dynamically downscale https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip5[CMIP6] models output to obtain convective resolved precipitation projections (i.e. 1 km). 
-* The https://www.mmm.ucar.edu/weather-research-and-forecasting-model[WRF] will be used for downscaling, and OBM will applied to its output to communicate uncertainties. 
+* https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5[ERA5] dataset to obtain predictors (i.e. atmospheric conditions) concurrent to +
+precipitation systems 
+. Dynamically downscale https://www.wcrp-climate.org/wgcm-cmip/wgcm-cmip5[CMIP6] models output to obtain convective resolved precipitation +
+projections (i.e. 1 km)
+* The https://www.mmm.ucar.edu/weather-research-and-forecasting-model[WRF] will be used for downscaling, and OBM will applied to its output to +
+communicate uncertainties
 
 === Your turn!
 
@@ -180,20 +210,6 @@ months ago, if persistent, install _v4.1.3_ from https://cloud.r-project.org/bin
 |FALSE|NULL|Inf|NaN|NA
 |NA_integer_|NA_real_|NA_complex_|NA_character_|…
 |===
-=== Dimensions of Environmental Data 
-
-* 1D data such as measurement of river flow, temperature, and rainfall, could be +
-presented as time series 
-
-* 2D data such as rainfall measured by satellite or remote sensing. It has longitude +
-(x-axis) and latitude dimensions (y-axis).  
-
-* 3D data, similar to 2D with respect to x and y axes; however depth or elevation is +
-considered. Examples, atmospheric data, oceanic data, and soil profiles.  
-
-{bl}
-
-NOTE: All these dimensions can additionally include the time axis. 
 
 == Variables and constants
 
@@ -483,12 +499,16 @@ example(foo)   # show an example of function foo
 ** _tidyverse_ is very useful, will come back to it later
 * `library(tidyverse)` -> loads the package into the active session
 ** Installing the libraries is not enough to use the functions they contain
-* `dplyr::select` -> use the `select` function from `dplyr` without loading the +
-whole library
-** The form `library::function` is considered good practice, particularly +
-when several libraries have the same function name (conflicts)
+* `dplyr::select` -> use the `select` function from `dplyr` without loading +
+the whole library
+// ** The form `library::function` is considered good practice, particularly +
+// when several libraries have the same function name (avoids conflicts)
 
-NOTE: It is good practice to load one function from the library (i.e. `namespace::function`) to avoid function conflicts. 
+NOTE: The form `library::function` is considered good practice, particularly +
+when several libraries have the same function name (avoids conflicts)
+
+// NOTE: It is good practice to load one function from the library +
+// (i.e. `namespace::function`) to avoid function conflicts
 
 == Vectors
 
@@ -2383,6 +2403,21 @@ image::gg_facet_1.png[height=650]
 ** Modified
 ** Created from scratch
 ** Saved into desired format
+
+=== Dimensions of Environmental Data 
+
+* 1D data such as measurement of river flow, temperature, and rainfall, could +
+be presented as time series 
+
+* 2D data such as rainfall measured by satellite or remote sensing. It has +
+longitude (x-axis) and latitude dimensions (y-axis).  
+
+* 3D data, similar to 2D with respect to x and y axes; however depth or elevation +
+is considered. E.g. atmospheric data, oceanic data, and soil profiles.  
+
+{bl}
+
+NOTE: All these dimensions can additionally include the time axis
 
 [.columns.is-vcentered]
 == _Rasters_
