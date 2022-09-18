@@ -105,7 +105,7 @@ major issue
 //shorturl.at/ano23
 // GROUNDWATCH 
 // https://join.slack.com/t/slack-cxr4273/shared\_invite/zt-1f9oeddd3-6azbgDBt2b73SSb3GRXjkQ
-shorturl.at/itZ06
+https://shorturl.at/itZ06[]
 
 image::GROUNDWATCH_SLACK.png[width=35%]
 // image::FRM_slack.png[width=35%]
