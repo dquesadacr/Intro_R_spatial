@@ -108,7 +108,8 @@ https://tinyurl.com/5e484yea[]
 //https://tinyurl.com/2hhwe9wv[]
 
 //image::GROUNDWATCH_SLACK.png[width=35%]
- image::FRM_slack.png[width=35%]
+
+image::FRM_SLACK.png[width=35%]
 
 == Background DQ
 [%step]
