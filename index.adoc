@@ -89,7 +89,7 @@ image:IHM.png[height=170]{nbsp}{nbsp}{nbsp}image:Logo_TU_Dresden.svg[height=170]
 * You can opt for a certificate of participation 
 * Requisites:
 [%step]
-** Assist to all lessons (sign attendence sheet daily)
+** Assist to all lessons (sign attendance sheet daily)
 *** Absence justified only with _sick certificate_ or +
 major issue
 ** Do all exercises and final presentation
@@ -101,11 +101,11 @@ major issue
 * You can post questions, code, examples, etc
 * Discussions are encouraged!
 * Scan the following QR code to join, or use the link: +
-// FRM: https://join.slack.com/t/slack-gnj7799/shared\_invite/zt-1f9ocxl0n-vs0fGOHZQzcSiz8jRXENnA
+// FRM: https://join.slack.com/t/introtorfrm2022/shared_invite/zt-1f9ocxl0n-vs0fGOHZQzcSiz8jRXENnA
 //shorturl.at/ano23
 // GROUNDWATCH 
-// https://join.slack.com/t/slack-cxr4273/shared\_invite/zt-1f9oeddd3-6azbgDBt2b73SSb3GRXjkQ
-https://shorturl.at/itZ06[]
+// https://join.slack.com/t/introtorgroundwatch22/shared_invite/zt-1f9oeddd3-6azbgDBt2b73SSb3GRXjkQ
+https://tinyurl.com/2hhwe9wv[]
 
 image::GROUNDWATCH_SLACK.png[width=35%]
 // image::FRM_slack.png[width=35%]
