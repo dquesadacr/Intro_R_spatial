@@ -102,13 +102,13 @@ major issue
 * Discussions are encouraged!
 * Scan the following QR code to join, or use the link: +
 // FRM: https://join.slack.com/t/introtorfrm2022/shared_invite/zt-1f9ocxl0n-vs0fGOHZQzcSiz8jRXENnA
-//shorturl.at/ano23
+https://tinyurl.com/5e484yea[]
 // GROUNDWATCH 
 // https://join.slack.com/t/introtorgroundwatch22/shared_invite/zt-1f9oeddd3-6azbgDBt2b73SSb3GRXjkQ
-https://tinyurl.com/2hhwe9wv[]
+//https://tinyurl.com/2hhwe9wv[]
 
-image::GROUNDWATCH_SLACK.png[width=35%]
-// image::FRM_slack.png[width=35%]
+//image::GROUNDWATCH_SLACK.png[width=35%]
+ image::FRM_slack.png[width=35%]
 
 == Background DQ
 [%step]
