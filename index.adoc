@@ -913,6 +913,35 @@ tail(cities, 2) # tail() the last 6, but can be changed
 
 image::readr.png[height=750]
 
+=== Exercise I
+
+//. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
+
+//. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
+
+. List all CSV files using `list.files.` Check the options `full.names` & `recursive`
+
+. Loop over the listed files and read them as dataframes or time series
+
+. Pick CSV files of your choice and: 
+    .. Plot different types of plots 
+    .. Run some statistical tests. 
+    .. Explore the climate conditions of your area 
+
+. You may do some aggregation, e.g., monthly, seasonally, and annually 
+. You can perform trend analysis or any time series analysis you would like.
+
+. You may convert the variables to common units such as Celsius or mm/day 
+
+[IMPORTANT] 
+.Climate Variables:
+==== 
+
+. sfcWind -> Surface wind [m/s]
+. pr -> Precipitation [kg m-2 s-1]
+. tas -> Surface temperature [k]
+====
+
 == Factors
 
 * _Factors_ categorize the data and store it as levels
@@ -3048,34 +3077,6 @@ be done with spatial data
 ** Voronoi polygons
 ** Extreme events distribution fit and analysis
 
-== Exercise I
-
-//. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
-
-//. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
-
-. List all CSV files using `list.files.` Check the options `full.names` & `recursive`
-
-. Loop over the listed files and read them as dataframes or time series
-
-. Pick CSV files of your choice and: 
-    .. Plot different types of plots 
-    .. Run some statistical tests. 
-    .. Explore the climate conditions of your area 
-
-. You may do some aggregation, e.g., monthly, seasonally, and annually 
-. You can perform trend analysis or any time series analysis you would like.
-
-. You may convert the variables to common units such as Celsius or mm/day 
-
-[IMPORTANT] 
-.Climate Variables:
-==== 
-
-. sfcWind -> Surface wind [m/s]
-. pr -> Precipitation [kg m-2 s-1]
-. tas -> Surface temperature [k]
-====
 == Exercise II
 
 //. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
