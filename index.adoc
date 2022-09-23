@@ -95,21 +95,21 @@ major issue
 ** Do all exercises and final presentation
 *** You can work in couples
 
-=== Slack channel
-
-* Join the _Slack_ channel
-* You can post questions, code, examples, etc
-* Discussions are encouraged!
-* Scan the following QR code to join, or use the link: +
-// FRM: https://join.slack.com/t/introtorfrm2022/shared_invite/zt-1f9ocxl0n-vs0fGOHZQzcSiz8jRXENnA
-https://tinyurl.com/5e484yea[]
-// GROUNDWATCH 
-// https://join.slack.com/t/introtorgroundwatch22/shared_invite/zt-1f9oeddd3-6azbgDBt2b73SSb3GRXjkQ
-//https://tinyurl.com/2hhwe9wv[]
-
-//image::GROUNDWATCH_SLACK.png[width=35%]
-
-image::FRM_SLACK.png[width=35%]
+// === Slack channel
+//
+// * Join the _Slack_ channel
+// * You can post questions, code, examples, etc
+// * Discussions are encouraged!
+// * Scan the following QR code to join, or use the link: +
+// // FRM: https://join.slack.com/t/introtorfrm2022/shared_invite/zt-1f9ocxl0n-vs0fGOHZQzcSiz8jRXENnA
+// https://tinyurl.com/5e484yea[]
+// // GROUNDWATCH
+// // https://join.slack.com/t/introtorgroundwatch22/shared_invite/zt-1f9oeddd3-6azbgDBt2b73SSb3GRXjkQ
+// //https://tinyurl.com/2hhwe9wv[]
+//
+// //image::GROUNDWATCH_SLACK.png[width=35%]
+//
+// image::FRM_SLACK.png[width=35%]
 
 == Background DQ
 [%step]
@@ -913,35 +913,6 @@ tail(cities, 2) # tail() the last 6, but can be changed
 ** _(readr)_ -> using the _readr_ library
 
 image::readr.png[height=750]
-
-=== Exercise I
-
-//. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
-
-//. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
-
-. List all CSV files using `list.files.` Check the options `full.names` & `recursive`
-
-. Loop over the listed files and read them as dataframes or time series
-
-. Pick CSV files of your choice and: 
-    .. Plot different types of plots 
-    .. Run some statistical tests. 
-    .. Explore the climate conditions of your area 
-
-. You may do some aggregation, e.g., monthly, seasonally, and annually 
-. You can perform trend analysis or any time series analysis you would like.
-
-. You may convert the variables to common units such as Celsius or mm/day 
-
-[IMPORTANT] 
-.Climate Variables:
-==== 
-
-. sfcWind -> Surface wind [m/s]
-. pr -> Precipitation [kg m-2 s-1]
-. tas -> Surface temperature [k]
-====
 
 == Factors
 
@@ -1850,6 +1821,37 @@ image::iris.png[height=800]
 ** `pdf()` -> vector, very useful
 
 * Will go in more detail with `ggplot2` -> allows more modifications
+
+
+== Exercise I
+
+//. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
+
+//. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
+
+. List all CSV files using `list.files.` Check the options `full.names` & `recursive`
+
+. Loop over the listed files and read them as dataframes or time series
+
+. Pick CSV files of your choice and:
+    .. Plot different types of plots
+    .. Run some statistical tests.
+    .. Explore the climate conditions of your area
+
+. You may do some aggregation, e.g., monthly, seasonally, and annually
+. You can perform trend analysis or any time series analysis you would like.
+
+. You may convert the variables to common units such as Celsius or mm/day
+
+[IMPORTANT]
+.Climate Variables:
+====
+
+. sfcWind -> Surface wind [m/s]
+. pr -> Precipitation [kg m-2 s-1]
+. tas -> Surface temperature [k]
+====
+
 
 == Tidyverse
 
