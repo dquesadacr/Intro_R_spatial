@@ -246,8 +246,8 @@ plot(dem_repro, xlim = c(11.5,15.5),
      ylim=c(50,52))
 plot(kreis_ogrT, add=TRUE)
 
-png("../images/dem_kreis_ogr_terra.png", width = 750,
-    height= 500, res = 150)
+png("../images/dem_kreis_ogr_terra.png", width = 850,
+    height= 600, res = 150)
 plot(dem_repro, xlim = c(11.5,15.5),
      ylim=c(50,52))
 plot(kreis_ogrT, add=TRUE)
@@ -266,6 +266,14 @@ plot(dem_repro, col= terrain.colors(12),
      xlim = c(11.5,15.5), ylim=c(50,52),
      main = "Main cities in Sachsen from terra")
 plot(kreis_ogrSub, add=TRUE)
+
+png("../images/dem_kreis_ogr_sub_terra.png", width = 750,
+    height= 500, res = 150)
+plot(dem_repro, col= terrain.colors(12),
+     xlim = c(11.5,15.5), ylim=c(50,52),
+     main = "Main cities in Sachsen from terra", cex = 1.15)
+plot(kreis_ogrSub, add=TRUE)
+dev.off()
 
 # Q -----------------------------------------------------------------------
 setwd("/media/ahmed/Volume/MA-Betreuung/R-Kurse/RKurs-Github/Intro_R_spatial/spatial/")
