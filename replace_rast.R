@@ -36,6 +36,16 @@ plot(r1, main = "Raster made from a matrix")
 # Plot the center of the pixels
 points(crds(r1), pch=3, cex=0.5)
 
+setwd("/media/ahmed/Volume/MA-Betreuung/R-Kurse/RKurs-Github/Intro_R_spatial")
+# save plots 
+png("images/matrix_raster_terra.png", width = 800,
+    height= 800, res = 150)
+#plot 
+plot(r1, main = "Raster made from a matrix")
+# Plot the center of the pixels
+points(crds(r1), pch=3, cex=0.5)
+
+dev.off()
 
 # PDF slide 85 ------------------------------------------------------------
 # Run these 4 lines in this order to install the "hires" version of "rnaturalearth"
@@ -116,6 +126,23 @@ terra::plot(de_dem, main = "Basic plot",
             col = RColorBrewer::brewer.pal(7, "BrBG"), 
             range = c(0, 2500),
             ylim = ext(de_dem)[c(3,4)])
+
+
+
+png("../images/histbox_dem_terra.png", width = 900,
+    height= 450, res = 150)
+
+par(mfrow=c(1,3))
+terra::hist(de_dem, main="Distribution of elevation \n values",
+            breaks=40,maxcell=1000000)
+terra::boxplot(de_dem, ylab= "Elevation", main = "Boxplot")
+terra::plot(de_dem, main = "Basic plot",
+            col = RColorBrewer::brewer.pal(7, "BrBG"), 
+            range = c(0, 2500),
+            ylim = ext(de_dem)[c(3,4)])
+
+dev.off()
+
 # PDF slide 89------------------------------------------------------------
 
 dem_repro <- terra::project(de_dem,
@@ -149,11 +176,12 @@ terrain_all <- terrain(dem_repro, unit='degrees',
 terrain_all
 class(terrain_all)
 
-png("../images/terrain_terra.png", width = 800,
-    height= 800, res = 150)
+png("../images/terrain_terra.png", width = 1500,
+    height= 1000, res = 150)
 
-plot(terrain_all)
+plot(terrain_all, cex=1.5)
 dev.off()
+
 terrain_all$TRI
 # PDF slide 93------------------------------------------------------------
 library(rnaturalearth)
@@ -185,14 +213,29 @@ masked_dem <- mask(dem_repro, vect(bundes))
 plot(masked_dem, main= "Masked to polygon")
 
 
+png("../images/crop_mask_terra.png", width = 800,
+    height= 1500, res = 150)
+par(mfrow=c(2,1))
+plot(cropped_dem, main= "Cropped to extent", cex=1.5)
+plot(bundes, add=TRUE)
+
+plot(masked_dem, main= "Masked to polygon", cex=1.5)
+dev.off()
+
+
 # PDF slide 95------------------------------------------------------------
-setwd("/media/ahmed/Volume/MA-Betreuung/R-Kurse/RKurs-Github/Intro_R_spatial/")
+setwd("/media/ahmed/Volume/MA-Betreuung/R-Kurse/RKurs-Github/Intro_R_spatial/spatial/")
 library(terra)
-kreis_ogr <- vect("./spatial/kreis.gpkg")
+kreis_ogr <- vect("kreis.gpkg")
 class(kreis_ogr)
 [1] "SpatialPolygonsDataFrame"
 attr(,"package")
 [1] "sp"
+
+png("../images/kreis_ogr_terra.png", width = 800,
+    height= 800, res = 150)
+plot(kreis_ogr, main = "Default terra plot")
+dev.off()
 
 plot(kreis_ogr, main = "Default terra plot")
 # PDF slide 96------------------------------------------------------------
@@ -202,6 +245,13 @@ kreis_ogrT <- project(kreis_ogr,"EPSG:4326")
 plot(dem_repro, xlim = c(11.5,15.5),
      ylim=c(50,52))
 plot(kreis_ogrT, add=TRUE)
+
+png("../images/dem_kreis_ogr_terra.png", width = 750,
+    height= 500, res = 150)
+plot(dem_repro, xlim = c(11.5,15.5),
+     ylim=c(50,52))
+plot(kreis_ogrT, add=TRUE)
+dev.off()
 
 library(sf)
 kreis_sf_2 <- st_as_sf(kreis_ogr)

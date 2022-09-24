@@ -2579,7 +2579,7 @@ min value   :         -892.30
 max value   :        13851.75 
 ----
 
-=== Plotting with _raster_ package
+=== Plotting with _terra_ package
 
 [source,R]
 ----
@@ -2592,7 +2592,7 @@ raster::plot(de_dem, main = "Basic plot")
 
 [.columns.is-vcentered]
 
-image::histbox_dem_terra.png[width=1800,height=800]
+image::histbox_dem_terra.png[width=900,height=450]
 
 [.columns.is-vcentered]
 === Reprojecting rasters
@@ -2625,7 +2625,7 @@ dev.off()
 
 [.column]
 --
-image::reproj_dem_terra.png[height=800]
+image::reproj_dem_terra.png[height=650]
 --
 
 === Save rasters
@@ -2725,7 +2725,7 @@ min values  :     0.000, -373.8375
 max values  :  1472.003,  453.8708 
 ----
 
-image::tri_bundes_terra.png[height=900]
+image::tri_bundes_terra.png[height=800, width=800]
 
 [.columns.is-vcentered]
 === Extent, crop and mask
@@ -2751,7 +2751,7 @@ plot(masked_dem, main= "Masked to polygon")
 ----
 
 [.column]
-image::crop_mask_terra.png[height=850,width=750]
+image::crop_mask_terra.png[height=850]
 
 //.is-vcentered
 [.columns]
@@ -2806,7 +2806,8 @@ image::kreis_sf.png[height=450]
 [source,R]
 ----
 library(tidyverse)
-kreis_ogrT <- project(kreis_ogr,"EPSG:4326")
+kreis_ogrT <- project(kreis_ogr,
+                      "EPSG:4326")
 
 plot(dem_repro, xlim = c(11.5,15.5),
      ylim=c(50,52))
@@ -2870,7 +2871,8 @@ kreis_sf == kreis_sf_2
 
 [source,R]
 ----
-kreis_ogrSub <- kreis_ogrT[grep("Kreisfreie",  kreis_ogrT$KREIS)]
+kreis_ogrSub <- kreis_ogrT[grep("Kreisfreie",
+                                kreis_ogrT$KREIS)]
                            
 plot(dem_repro, col= terrain.colors(12),
      xlim = c(11.5,15.5), ylim=c(50,52),
@@ -3136,7 +3138,7 @@ Don't hesitate to do it!
 * Analyse the data provided and generally follow the provided exercises
 //* Analyse a data set of your interest
 //** Gapminder (also from the website), worldcities, rnaturalearth or similar, there is a lot of open data online
-** Choose a region/country of interest
+//** Choose a region/country of interest
 ** Wrangle to analyse trends inside the data
 ** If possible, do some statistical tests or regression, interpret it
 
