@@ -3069,6 +3069,97 @@ raster_gg <- ggplot(masked.spdf.de) +
 
 image::raster_gg_2.png[height=900]
 
+== NetCDF data
+
+[%step] 
+* NetCDF (***Net**work **C**ommon **D**ata **F**orm) is a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data. https://www.unidata.ucar.edu/software/netcdf/[Unidata-NetCDF]
+
+* Scientific data (variables) can be temperature, + humidity, pressure, wind speed, and direction. 
+
+* The netCDF format is: 
+** Self-Describing &#8658; Containing metadata according to the https://cfconventions.org/[NetCDF Climate and Forecast (CF) Metadata Conventions]
+// A netCDF file includes information about the data it contains. Portable. A netCDF file can be accessed by computers with different ways of storing integers, characters, and floating-point numbers.
+** Scalable &#8658; Subsetting large datasets is efficient. 
+// Small subsets of large datasets in various formats may be accessed efficiently through netCDF interfaces, even from remote servers.
+** Appendable &#8658; Neither copying nor reading the data is required for appending.
+//Data may be appended to a properly structured netCDF file without copying the dataset or redefining its structure.
+** Sharable &#8658; Parallel Reading
+// One writer and multiple readers may simultaneously access the same netCDF file.
+** Archivable &#8658; Supported for a long term. 
+// Access to all earlier forms of netCDF data will be supported by current and future versions of the software.
+
+TIP: Always look for a data format that in compliance with the Resarch Data Managament of your instuite. For example, https://tu-dresden.de/tu-dresden/qualitaetsmanagement/ressourcen/dateien/wisprax/Leitlinien-fuer-den-Umgang-mit-Forschungsdaten-an-der-TU-Dresden.pdf?lang=en[Reserach Data Guidlines, TU Dresden] 
+
+=== NetCDF Structure
+
+// inset environmental data here 
+image::netcdf-file-structure.png[height=800]
+
+=== NetCDF and `ncdf4` package 
+
+=== NetCDF and `terra` package 
+
+== General Info Regarding Excerises
+//[.col2]
+* You should utilise the exercises to help you prepare for the final presentations.
+
+* The minimum expectations of the presentation are:
+
+.. Choosing one climate variable and one RCP scenario, for example, surface temperature (tas) with RCP8.5.  
+.. Performing the three exercises and presenting adequate results. 
+.. Submitting your presentation and the code you used to analyse the data and prepare the plots. 
+
+//* Presentation: .. Group of two 
+
+image::Tree.png[width=800]
+
+IMPORTANT: Be curious, let the internet be your friend!
+
+//[.columns.is-vcentered]
+=== Exercise I
+. Pick one scenario and variable for your group. 
+. List all CSV files using `list.files.` Check the options `full.names` & `pattern`. 
+. Loop over the listed files and read them as data frames or time series. 
+. Compare the different periods using statistical measurements (e.g., mean, median) and statistical tests (e.g., t.test)
+. Plot different types of plots to support your findings. For example, time series, boxplots, densities, etc
+. You may do some aggregation, e.g., monthly, seasonally, and annually
+. You can perform trend analysis or any time series analysis you would like.
+. You may convert the variables to common units such as Celsius or mm/day.
+
+[IMPORTANT]
+.Climate Variables:
+====
+
+. sfcWind -> Surface wind [m/s]
+. pr -> Precipitation [kg m-2 s-1]
+. tas -> Surface temperature [k]
+====
+
+=== Exercise II 
+
+. Use the same scenario and variable you opted in Exercise I.
+. Extract netCDF files content as arrays using terra. 
+. Consider each pixel as a time series as in Exercise I and perform a similar analysis. 
+. Plot your results as maps using `ggplot2`
+.. You may add borders, rivers, and any features that complement your maps. 
+
+=== Exercise III 
+. Use the same scenario and variable you opted in Exercise I  & II. 
+. Pick a location in the globe you want to present, knowing its longitude and latitude. 
+. Read the netCDF files you choose using `terra` package and extract them as arrays. 
+. Extract the vertical profiles for your locations and plot them, comparing the different periods.
+. You may want to calculate wind speed and direction from ua and va. + Don't hesitate to do it! 
+
+
+[IMPORTANT]
+.Climate Variables:
+====
+
+. hus-> Specific humitidiy [g/kg]
+. ta-> Temperature [k]
+. ua & va -> u and v wind componemnts [m/s]
+====
+
 == Last remarks
 
 * There usually is more than one way to achieve similar results
@@ -3082,78 +3173,29 @@ be done with spatial data
 ** Voronoi polygons
 ** Extreme events distribution fit and analysis
 
-== Exercise II
+//== Homework
 
-//. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
-
-//. List all netCDF files (except files in `final task` folder) using `list.files.` Check the options `full.names` & `recursive`
-
-. List all CSV files using `list.files.` Check the options `full.names` & `recursive`
-
-. Loop over the listed files and read them as dataframes or time series
-
-. Pick CSV files of your choice and: 
-    .. Plot different types of plots 
-    .. Run some statistical tests. 
-    .. Explore the climate conditions of your area 
-
-. You may do some aggregation, e.g., monthly, seasonally, and annually 
-. You can perform trend analysis or any time series analysis you would like.
-
-. You may convert the variables to common units such as Celsius or mm/day 
-
-[IMPORTANT] 
-.Climate Variables:
-==== 
-
-. sfcWind -> Surface wind [m/s]
-. pr -> Precipitation [kg m-2 s-1]
-. tas -> Surface temperature [k]
-====
-
-== Exercise III
-
-. Pick a location (i.e. longitude and latitude), where you want to apply your analysis.
-
-. List all netCDF files in `final task` using `list.files.` Check the options `full.names` & `recursive`
-
-. Access the files using `terra` and obtain the vertical profiles for your location. 
-
-. The netCDF files include variables such u and v wind components + 
-specific humidity (hus), and temperature (ta). 
-
-. You may read all files and combine the information in on data frame for each variable, e.g., hus
-
-. Plot four plots for each variable and compare the different periods and scenarios. 
-
-. You may want to calculate wind speed and wind direction from u and v. +
-Don't hesitate to do it! 
-
-. You may convert the variables to common units such as Celsius
-
-== Homework
-
-[.col2]
-* Groups of two
-* Analyse the data provided and generally follow the provided exercises
+//[.col2]
+//* Groups of two
+//* Analyse the data provided and generally follow the provided exercises
 //* Analyse a data set of your interest
 //** Gapminder (also from the website), worldcities, rnaturalearth or similar, there is a lot of open data online
 //** Choose a region/country of interest
-** Wrangle to analyse trends inside the data
-** If possible, do some statistical tests or regression, interpret it
+//** Wrangle to analyse trends inside the data
+//** If possible, do some statistical tests or regression, interpret it
 
-[.col2]
-* Make nice maps about it (_ggplot_)
-** Facetting for multiple variables
-** Try different `aes`
-** Include at least one raster -> crop/mask to region
-* Try to automatize processes by writing function that:
-** Creates plots and saves them giving raster and/or vector or other related arguments, for example...
+//[.col2]
+//* Make nice maps about it (_ggplot_)
+//** Facetting for multiple variables
+//** Try different `aes`
+//** Include at least one raster -> crop/mask to region
+//* Try to automatize processes by writing function that:
+//** Creates plots and saves them giving raster and/or vector or other related arguments, for example...
 
-IMPORTANT: Do something you feel pleased with! +
-Be curious, let the internet be your friend!
+//IMPORTANT: Do something you feel pleased with! +
+//Be curious, let the internet be your friend!
 
-[.columns.is-vcentered]
+//[.columns.is-vcentered]
 == References and other info
 
 [.column]
