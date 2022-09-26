@@ -2725,7 +2725,7 @@ min values  :     0.000, -373.8375
 max values  :  1472.003,  453.8708 
 ----
 
-image::tri_bundes_terra.png[height=800, width=800]
+image::tri_bundes_terra.png[height=600]
 
 [.columns.is-vcentered]
 === Extent, crop and mask
@@ -3076,25 +3076,35 @@ image::raster_gg_2.png[height=900]
 == NetCDF data
 
 [%step] 
-* NetCDF (***Net**work **C**ommon **D**ata **F**orm) is a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data. https://www.unidata.ucar.edu/software/netcdf/[Unidata-NetCDF]
+* NetCDF (**Net**work **C**ommon **D**ata **F**orm) is a set of software libraries and +
+machine-independent data formats that support the creation, access, +
+and sharing  of array-oriented scientific data. https://www.unidata.ucar.edu/software/netcdf/[Unidata-NetCDF]
 
-* Scientific data (variables) can be temperature, + humidity, pressure, wind speed, and direction. 
+* Scientific data (variables) can be temperature, humidity, pressure, wind +
+speed, direction, among others
 
-* The netCDF format is: 
-** Self-Describing &#8658; Containing metadata according to the https://cfconventions.org/[NetCDF Climate and Forecast (CF) Metadata Conventions]
+
+=== NetCDF data characteristics
+
+* The _NetCDF_ format is: 
+** Self-Describing &#8658; Containing metadata according to the +
+https://cfconventions.org/[NetCDF Climate and Forecast (CF) Metadata Conventions]
 // A netCDF file includes information about the data it contains. Portable. A netCDF file can be accessed by computers with different ways of storing integers, characters, and floating-point numbers.
-** Scalable &#8658; Subsetting large datasets is efficient. 
+** Scalable &#8658; Subsetting large datasets is efficient
 // Small subsets of large datasets in various formats may be accessed efficiently through netCDF interfaces, even from remote servers.
-** Appendable &#8658; Neither copying nor reading the data is required for appending.
+** Appendable &#8658; Neither copying nor reading the data is +
+required for appending
 //Data may be appended to a properly structured netCDF file without copying the dataset or redefining its structure.
 ** Sharable &#8658; Parallel Reading
 // One writer and multiple readers may simultaneously access the same netCDF file.
-** Archivable &#8658; Supported for a long term. 
+** Archivable &#8658; Supported for a long term
 // Access to all earlier forms of netCDF data will be supported by current and future versions of the software.
 
-TIP: Always look for a data format that in compliance with the Resarch Data Managament of your instuite. For example, https://tu-dresden.de/tu-dresden/qualitaetsmanagement/ressourcen/dateien/wisprax/Leitlinien-fuer-den-Umgang-mit-Forschungsdaten-an-der-TU-Dresden.pdf?lang=en[Reserach Data Guidlines, TU Dresden] 
+TIP: Always look for a data format that in compliance with the +
+Research Data Managament of your institute. For example, +
+https://tu-dresden.de/tu-dresden/qualitaetsmanagement/ressourcen/dateien/wisprax/Leitlinien-fuer-den-Umgang-mit-Forschungsdaten-an-der-TU-Dresden.pdf?lang=en[Research Data Guidelines, TU Dresden] 
 
-[.columns]
+[.columns.is-vcentered]
 === NetCDF Structure
 [.column]
 [%step]
@@ -3103,22 +3113,21 @@ TIP: Always look for a data format that in compliance with the Resarch Data Mana
 * It (should) always contains metadata
 
 
-
 [.column]
 // inset environmental data here 
+[%step]
 image::netcdf-file-structure.png[height=800]
 
-[.columns]
+[.columns.is-vcentered]
 === NetCDF and `ncdf4` package 
 
 [.column]
 --
-* It is the R interface to netCDF files. 
+* It is the R interface to _NetCDF_ files. 
 * It follows the CF convections.
 
 [source,R]
 ----
-# file name 
 library(ncdf4)
 library(ncdf4.helpers)
 
@@ -3126,11 +3135,10 @@ setwd("your/path/to/example/file")
 f<-"example.nc"
 
 # open file 
-ncin<-nc_open(f)
-
+ncin <- nc_open(f)
 print(ncin)
 ----
-image::ncin_output.png[width=600, height=450]
+image::ncin_output.png[height=450]
 --
 
 [.column]
@@ -3171,7 +3179,7 @@ ncatt_get(ncin,"pr","_FillValue")
 //image::ncin_output.png[width=500]
 --
 
-[.columns]
+[.columns.is-vcentered]
 === NetCDF and `ncdf4` package 
 
 [.column]
@@ -3277,32 +3285,35 @@ ggplot()+
 ----
 --
 
-== General Info Regarding Excerises
+== General Info Regarding Exercises
 //[.col2]
 * You should utilise the exercises to help you prepare for the final presentations.
 
 * The minimum expectations of the presentation are:
 
-.. Choosing one climate variable and one RCP scenario, for example, precipitation (pr) with RCP2.6.  
+.. Choosing one climate variable and one RCP scenario, for example, +
+precipitation (pr) with RCP2.6.  
 .. Performing the three exercises and presenting adequate results. 
-.. Submitting your presentation and the code you used to analyse the data and prepare the plots. 
+.. Submitting your presentation and the code you used to analyse the +
+data and prepare the plots. 
 
 //* Presentation: .. Group of two 
 
-image::Tree.png[width=800]
+image::Tree.png[width=1000]
 
-IMPORTANT: Be curious, let the internet be your friend!
 //[.columns.is-vcentered]
 
 === Exercise I
 . Pick one scenario and variable for your group. 
 . List all CSV files using `list.files.` Check the options `full.names` & `pattern`. 
 . Loop over the listed files and read them as data frames or time series. 
-. Compare the different periods using statistical measurements (e.g., mean, median) and statistical tests (e.g., t.test)
-. Plot different types of plots to support your findings. For example, time series, boxplots, densities, etc
+. Compare the different periods using statistical measurements (e.g., `mean`, `median`) +
+and statistical tests (e.g., `t.test`)
+. Plot different types of plots to support your findings. For example, time series, +
+boxplots, densities, etc
 . You may do some aggregation, e.g., monthly, seasonally, and annually
 . You can perform trend analysis or any time series analysis you would like.
-. You may convert the variables to common units such as Celsius or mm/day.
+. You may convert the variables to common units such as _Celsius_ or _mm/day_.
 
 [IMPORTANT]
 .Climate Variables:
@@ -3316,17 +3327,23 @@ IMPORTANT: Be curious, let the internet be your friend!
 === Exercise II 
 
 . Use the same scenario and variable you opted in Exercise I.
-. Extract netCDF files content as arrays using terra. 
-. Consider each pixel as a time series as in Exercise I and perform a similar analysis. 
-. Plot your results as maps using `ggplot2`
-.. You may add borders, rivers, and any features that complement your maps. 
+. Extract _NetCDF_ files content as arrays using `terra`. 
+. Consider each pixel as a time series as in Exercise I and +
+perform a similar analysis. 
+. Plot your results as maps using `ggplot2`.
+* You may add borders, rivers, and any features that +
+complement your maps. 
 
 === Exercise III 
-. Use the same scenario and variable you opted in Exercise I  & II. 
-. Pick a location in the globe you want to present, knowing its longitude and latitude. 
-. Read the netCDF files you choose using `terra` package and extract them as arrays. 
-. Extract the vertical profiles for your locations and plot them, comparing the different periods.
-. You may want to calculate wind speed and direction from ua and va. + Don't hesitate to do it! 
+. Use the same scenario and variable you opted in Exercise I & II. 
+. Pick a location in the globe you want to present, knowing its +
+longitude and latitude. 
+. Read the _NetCDF_ files you choose using `terra` package and +
+extract them as arrays. 
+. Extract the vertical profiles for your locations and plot +
+them, comparing the different periods.
+. You may want to calculate wind speed and direction from +
+_ua_ and _va_. Don't hesitate to do it! 
 
 
 [IMPORTANT]
@@ -3350,6 +3367,10 @@ be done with spatial data
 ** Watershed delineation
 ** Voronoi polygons
 ** Extreme events distribution fit and analysis
+
+{bl}
+
+IMPORTANT: Be curious, let the internet be your friend!
 
 //== Homework
 
