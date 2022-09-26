@@ -19,24 +19,27 @@ print(ncin)
 
 # get longitude and latitude
 lon <- ncvar_get(ncin,"lon")
-nlon <- dim(lon)
 head(lon)
+[1]  0  2  4  6  8 10
 
+# get latitude
 lat <- ncvar_get(ncin,"lat")
-nlat <- dim(lat)
 head(lat)
-
+[1]  -89 -87 -85 -83 -81 -79
 # get time
 time <- ncvar_get(ncin,"time")
 head(time)
-
+[1] 46020.5 46021.5 46022.5 46023.5
+# convert time 
 time_converted<-ncdf4.helpers::nc.get.time.series(f = ncin)
-
 head(time_converted)
-# get temperature
-tmp_array <- ncvar_get(ncin,"pr")
+[1] "1976-01-01 12:00:00" "1976-01-02 12:00:00" "1976-01-03 12:00:00" "1976-01-04 12:00:00"
 
+# get precipitation 
+tmp_array <- ncvar_get(ncin,"pr")
+# convert to mm/day 
 tmp_array <-tmp_array*86400
+
 ncatt_get(ncin,"pr","long_name")
  
 ncatt_get(ncin,"pr","units")
@@ -87,3 +90,15 @@ ggplot()+
   
   scale_fill_gradientn(colors = rev(brewer.pal(11,"RdBu")))+
   theme_light(base_size = 8)
+
+
+
+#
+library(robustbase) 
+library(readr)
+
+currentDataset <- read_csv("https://statsnotebook.io/blog/data_management/example_data/stars.csv")
+res <- lmrob(light ~ temperature,
+             data=currentDataset)
+summary(res)
+cbind(coef(res),confint(res, level = 0.95))

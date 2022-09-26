@@ -275,6 +275,32 @@ plot(dem_repro, col= terrain.colors(12),
 plot(kreis_ogrSub, add=TRUE)
 dev.off()
 
+
+
+# vect --------------------------------------------------------------------
+
+library(terra)
+
+### SpatVector from a geom matrix
+x1 <- rbind(c(-180,-20), c(-140,55), c(10, 0), c(-140,-60))
+x1<-vect(x1, "polygons")
+plot(x1)
+
+
+x2 <- rbind(c(-180,-20), c(-140,55))
+x2<-vect(z[,1:4], "lines")
+plot(x2)
+
+x2 <- rbind(c(-10,0), c(140,60), c(160,0), c(140,-55))
+x3 <- rbind(c(-125,0), c(0,60), c(40,5), c(15,-45))
+hole <- rbind(c(80,0), c(105,13), c(120,2), c(105,-13))
+z <- rbind(cbind(object=1, part=1, x1, hole=0), cbind(object=2, part=1, x3, hole=0),
+           cbind(object=3, part=1, x2, hole=0), cbind(object=3, part=1, hole, hole=1))
+colnames(z)[3:4] <- c('x', 'y')
+
+p <- vect(z, "polygons")
+
+plot(p)
 # Q -----------------------------------------------------------------------
 setwd("/media/ahmed/Volume/MA-Betreuung/R-Kurse/RKurs-Github/Intro_R_spatial/spatial/")
 

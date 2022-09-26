@@ -3095,7 +3095,61 @@ TIP: Always look for a data format that in compliance with the Resarch Data Mana
 // inset environmental data here 
 image::netcdf-file-structure.png[height=800]
 
+[.columns]
 === NetCDF and `ncdf4` package 
+
+[.column]
+--
+* It is the R interface to netCDF files. 
+* It follows the CF convections.
+
+[source,R]
+----
+# file name 
+library(ncdf4)
+library(ncdf4.helpers)
+
+setwd("your/path/to/example/file")
+f<-"example.nc"
+
+# open file 
+ncin<-nc_open(f)
+
+print(ncin)
+----
+image::ncin_output.png[width=700]
+--
+
+[.column]
+--
+* Getting data: 
+
+[source,R]
+----
+# get longitude and latitude
+lon <- ncvar_get(ncin,"lon")
+head(lon)
+[1]  0  2  4  6  8 10
+# get latitude
+lat <- ncvar_get(ncin,"lat")
+head(lat)
+[1]  -89 -87 -85 -83 -81 -79
+# get time
+time <- ncvar_get(ncin,"time")
+head(time)
+[1] 46020.5 46021.5 46022.5 46023.5
+# convert time 
+time_converted<-ncdf4.helpers::nc.get.time.series(f = ncin)
+head(time_converted)
+[1] "1976-01-01 12:00:00" "1976-01-02 12:00:00"
+ "1976-01-03 12:00:00" "1976-01-04 12:00:00"
+# get precipitation 
+tmp_array <- ncvar_get(ncin,"pr")
+# convert to mm/day 
+tmp_array <-tmp_array*86400
+----
+//image::ncin_output.png[width=500]
+--
 
 === NetCDF and `terra` package 
 
@@ -3105,7 +3159,7 @@ image::netcdf-file-structure.png[height=800]
 
 * The minimum expectations of the presentation are:
 
-.. Choosing one climate variable and one RCP scenario, for example, surface temperature (tas) with RCP8.5.  
+.. Choosing one climate variable and one RCP scenario, for example, precipitation (pr) with RCP2.6.  
 .. Performing the three exercises and presenting adequate results. 
 .. Submitting your presentation and the code you used to analyse the data and prepare the plots. 
 
