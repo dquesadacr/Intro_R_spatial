@@ -1674,10 +1674,10 @@ source      : memory
 name        : deutschland_dgm
 min value   :         -892.30
 max value   :        13851.75</code></pre></div></div></div></section><section id="_plotting_with_terra_package"><h2>Plotting with <em>terra</em> package</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">par(mfrow=c(1,3))
-raster::hist(de_dem, main="Distribution of elevation \n values",
+terra::hist(de_dem, main="Distribution of elevation \n values",
              breaks=40,maxpixels=1000000)
-raster::boxplot(de_dem, ylab= "Elevation", main = "Boxplot")
-raster::plot(de_dem, main = "Basic plot")</code></pre></div></div>
+terra::boxplot(de_dem, ylab= "Elevation", main = "Boxplot")
+terra::plot(de_dem, main = "Basic plot")</code></pre></div></div>
 <div class="imageblock columns is-vcentered"><img src="./images/histbox_dem_terra.png" alt="histbox dem terra" width="900" height="450"></div></div></section><section id="_reprojecting_rasters" class="columns is-vcentered"><h2>Reprojecting rasters</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">dem_repro &lt;- terra::project(de_dem,
                            "+proj=longlat +datum=WGS84")
 dem_repro
@@ -1785,7 +1785,7 @@ plot(kreis_ogrT, add=TRUE)</code></pre></div></div>
 <div class="imageblock"><img src="./images/dem_kreis_ogr_terra.png" alt="dem kreis ogr terra" width="500"></div></div></div>
 <div class="openblock column"><div class="content"><div class="ulist"><ul><li><p>From <code>sf</code> to another projection</p></li></ul></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">kreis_sfT &lt;- st_transform(kreis_sf,
-    sp::CRS(SRS_string = "EPSG:4326"))
+                        "EPSG:4326")
 
 plot(dem_repro, xlim = c(11.5,15.5),
      ylim=c(50,52))
@@ -1811,7 +1811,7 @@ kreis_sf == kreis_sf_2
 [10,]       TRUE  TRUE TRUE
 [11,]       TRUE  TRUE TRUE
 [12,]       TRUE  TRUE TRUE
-[13,]       TRUE  TRUE TRUE</code></pre></div></div></div></div></div></section><section id="_subset_vector_data" class="columns is-vcentered"><h2>Subset vector data</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="ulist"><ul><li><p>From <code>sp</code> with <em>base-R</em></p></li></ul></div>
+[13,]       TRUE  TRUE TRUE</code></pre></div></div></div></div></div></section><section id="_subset_vector_data" class="columns is-vcentered"><h2>Subset vector data</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="ulist"><ul><li><p>Using <em>base-R</em> and <code>terra</code></p></li></ul></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">kreis_ogrSub &lt;- kreis_ogrT[grep("Kreisfreie",
                                 kreis_ogrT$KREIS)]
 
@@ -1892,8 +1892,9 @@ plot(lines_sf)</code></pre></div></div>
 <section><section id="_plotting_spatial_data_with_ggplot2"><h2>Plotting spatial data with <em>ggplot2</em></h2><div class="slide-content"><div class="ulist"><ul><li><p><em>Rasters</em> should be transformed to a <em>data frame</em> format</p><div class="ulist"><ul><li><p><code>geom_raster</code> has some limitations &#8594; better use <code>geom_tile</code></p></li></ul></div></li><li><p>Easy to plot vectors when they are in <code>sf</code> format</p><div class="ulist"><ul><li><p><code>geom_sf</code></p></li></ul></div></li></ul></div><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">cropped &lt;- crop(dem_repro, kreis_sfT)
 masked_dem_sn &lt;- mask(cropped, kreis_sfT)
 
-masked.spdf&lt;- as(masked_dem_sn, "SpatialPixelsDataFrame") %&gt;%
-    as.data.frame() %&gt;% rename(elev = deutschland_dgm)
+masked.spdf&lt;- terra::as.data.frame(masked_dem_sn,
+                                   xy =TRUE) %&gt;%
+  dplyr::rename(elev = deutschland_dgm)
 
 raster_gg &lt;- ggplot(masked.spdf) +
     geom_tile(aes(fill=elev, x=x, y=y)) +
@@ -1926,7 +1927,8 @@ raster_gg &lt;- ggplot(masked.spdf.de) +
          title = "Fancy details with other vectors") +
     theme_light(base_size = 11) +
     scale_fill_gradientn(colours = terrain.colors(7))</code></pre></div></div></div></section><section id="_fancy_plot"><h2>Fancy plot</h2><div class="slide-content"><div class="imageblock"><img src="./images/raster_gg_2.png" alt="raster gg 2" height="900"></div></div></section></section>
-<section><section id="_netcdf_data"><h2>NetCDF data</h2><div class="slide-content"><div class="ulist"><ul><li class="fragment"><p>NetCDF (<strong>*Net</strong>work <strong>C</strong>ommon <strong>D</strong>ata <strong>F</strong>orm) is a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data. <a href="https://www.unidata.ucar.edu/software/netcdf/">Unidata-NetCDF</a></p></li><li class="fragment"><p>Scientific data (variables) can be temperature, + humidity, pressure, wind speed, and direction.</p></li><li class="fragment"><p>The netCDF format is:</p><div class="ulist"><ul><li><p>Self-Describing &#8658; Containing metadata according to the <a href="https://cfconventions.org/">NetCDF Climate and Forecast (CF) Metadata Conventions</a></p></li><li><p>Scalable &#8658; Subsetting large datasets is efficient.</p></li><li><p>Appendable &#8658; Neither copying nor reading the data is required for appending.</p></li><li><p>Sharable &#8658; Parallel Reading</p></li><li><p>Archivable &#8658; Supported for a long term.</p></li></ul></div></li></ul></div><div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content">Always look for a data format that in compliance with the Resarch Data Managament of your instuite. For example, <a href="https://tu-dresden.de/tu-dresden/qualitaetsmanagement/ressourcen/dateien/wisprax/Leitlinien-fuer-den-Umgang-mit-Forschungsdaten-an-der-TU-Dresden.pdf?lang=en">Reserach Data Guidlines, TU Dresden</a></td></tr></table></div></div></section><section id="_netcdf_structure"><h2>NetCDF Structure</h2><div class="slide-content"><div class="imageblock"><img src="./images/netcdf-file-structure.png" alt="netcdf file structure" height="800"></div></div></section><section id="_netcdf_and_ncdf4_package" class="columns"><h2>NetCDF and <code>ncdf4</code> package</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="ulist"><ul><li><p>It is the R interface to netCDF files.</p></li><li><p>It follows the CF convections.</p></li></ul></div>
+<section><section id="_netcdf_data"><h2>NetCDF data</h2><div class="slide-content"><div class="ulist"><ul><li class="fragment"><p>NetCDF (<strong>*Net</strong>work <strong>C</strong>ommon <strong>D</strong>ata <strong>F</strong>orm) is a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data. <a href="https://www.unidata.ucar.edu/software/netcdf/">Unidata-NetCDF</a></p></li><li class="fragment"><p>Scientific data (variables) can be temperature, + humidity, pressure, wind speed, and direction.</p></li><li class="fragment"><p>The netCDF format is:</p><div class="ulist"><ul><li><p>Self-Describing &#8658; Containing metadata according to the <a href="https://cfconventions.org/">NetCDF Climate and Forecast (CF) Metadata Conventions</a></p></li><li><p>Scalable &#8658; Subsetting large datasets is efficient.</p></li><li><p>Appendable &#8658; Neither copying nor reading the data is required for appending.</p></li><li><p>Sharable &#8658; Parallel Reading</p></li><li><p>Archivable &#8658; Supported for a long term.</p></li></ul></div></li></ul></div><div class="admonitionblock tip"><table><tr><td class="icon"><i class="fa fa-lightbulb-o" title="Tip"></i></td><td class="content">Always look for a data format that in compliance with the Resarch Data Managament of your instuite. For example, <a href="https://tu-dresden.de/tu-dresden/qualitaetsmanagement/ressourcen/dateien/wisprax/Leitlinien-fuer-den-Umgang-mit-Forschungsdaten-an-der-TU-Dresden.pdf?lang=en">Reserach Data Guidlines, TU Dresden</a></td></tr></table></div></div></section><section id="_netcdf_structure" class="columns"><h2>NetCDF Structure</h2><div class="slide-content"><div class="ulist column"><ul><li class="fragment"><p>A netCDF file can contain multiple variables</p></li><li class="fragment"><p>Generally, the data is georeferenced</p></li><li class="fragment"><p>It (should) always contains metadata</p></li></ul></div>
+<div class="imageblock column"><img src="./images/netcdf-file-structure.png" alt="netcdf file structure" height="800"></div></div></section><section id="_netcdf_and_ncdf4_package" class="columns"><h2>NetCDF and <code>ncdf4</code> package</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="ulist"><ul><li><p>It is the R interface to netCDF files.</p></li><li><p>It follows the CF convections.</p></li></ul></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R"># file name
 library(ncdf4)
 library(ncdf4.helpers)
@@ -1938,7 +1940,7 @@ f&lt;-"example.nc"
 ncin&lt;-nc_open(f)
 
 print(ncin)</code></pre></div></div>
-<div class="imageblock"><img src="./images/ncin_output.png" alt="ncin output" width="700"></div></div></div>
+<div class="imageblock"><img src="./images/ncin_output.png" alt="ncin output" width="600" height="450"></div></div></div>
 <div class="openblock column"><div class="content"><div class="ulist"><ul><li><p>Getting data:</p></li></ul></div>
 <div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R"># get longitude and latitude
 lon &lt;- ncvar_get(ncin,"lon")
@@ -1960,13 +1962,78 @@ head(time_converted)
 # get precipitation
 tmp_array &lt;- ncvar_get(ncin,"pr")
 # convert to mm/day
-tmp_array &lt;-tmp_array*86400</code></pre></div></div></div></div></div></section><section id="_netcdf_and_terra_package"><h2>NetCDF and <code>terra</code> package</h2></section></section>
+tmp_array &lt;-tmp_array*86400</code></pre></div></div>
+<div class="paragraph"><p>For you to try:</p></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">ncatt_get(ncin,"pr","long_name")
+ncatt_get(ncin,"pr","units")
+ncatt_get(ncin,"pr","_FillValue")</code></pre></div></div></div></div></div></section><section id="_netcdf_and_ncdf4_package_2" class="columns"><h2>NetCDF and <code>ncdf4</code> package</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R"># get dim
+dim(tmp_array)
+[1] 180  90   4
+# take one layer
+tmp_slice &lt;- tmp_array[,,1]
+
+library(lattice)
+library(RColorBrewer)
+# quick map
+image(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
+
+# another option
+library(fields)
+image.plot(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))</code></pre></div></div></div></div>
+<div class="openblock column"><div class="content"><div class="ulist"><ul><li><p>Generally, <strong>NOT RECOMMENDED</strong></p></li></ul></div>
+<div class="imageblock"><img src="./images/ncdf4_plot_fields.png" alt="ncdf4 plot fields" width="800"></div></div></div></div></section><section id="_netcdf_and_terra_package" class="columns"><h2>NetCDF and <code>terra</code> package</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="olist arabic"><ol class="arabic"><li><p>Easy and fast access to the netCDF data</p></li><li><p>Memory efficient compared to <code>ncdf4</code></p></li><li><p>Ability of storing data on the disk (No RAM issues)</p></li></ol></div>
+<div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">library(terra)
+r&lt;-rast(f)
+# meta data
+r
+class       : SpatRaster
+dimensions  : 90, 180, 4  (nrow, ncol, nlyr)
+resolution  : 2, 2  (x, y)
+extent      : -1, 359, -90, 90  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84
+source      : example.nc:pr
+varname     : pr (Precipitation)
+names       :       pr_1,       pr_2,       pr_3,       pr_4
+unit        : kg m-2 s-1, kg m-2 s-1, kg m-2 s-1, kg m-2 s-1
+time (days) : 1976-01-01 to 1976-01-04
+
+# convert units
+r&lt;-r*86400
+# check values
+r
+# plot
+plot(r)</code></pre></div></div></div></div>
+<div class="openblock column"><div class="content"><div class="imageblock"><img src="./images/netCDf_terra.png" alt="netCDf terra" width="800"></div></div></div></div></section><section id="_plotting_netcdf_using_ggplot2_package"><h2>Plotting NetCDF using <code>ggplot2</code> package</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R"># convert to df
+r.df&lt;-terra::as.data.frame(r, xy=T)
+
+# change order of lon
+r.df$x&lt;-ifelse(r.df$x&gt;180, r.df$x -360, r.df$x)
+
+library(ggplot2)
+library(rnaturalearth)
+library(sf)
+
+# to stay PC and avoid boarders issue
+spdf_world &lt;- ne_coastline(returnclass = "sf")
+
+#plot
+ggplot()+
+  geom_raster(r.df,
+              mapping =  aes(x,y,
+                             fill=pr_1))+
+  geom_sf(spdf_world,
+          mapping = aes(),
+          fill=NA, color ="black")+
+
+  scale_fill_viridis_c(begin = 0,
+                       end = 1)+
+  theme_light(base_size = 8)</code></pre></div></div></div></div></div></section></section>
 <section><section id="_general_info_regarding_excerises"><h2>General Info Regarding Excerises</h2><div class="slide-content"><div class="ulist"><ul><li><p>You should utilise the exercises to help you prepare for the final presentations.</p></li><li><p>The minimum expectations of the presentation are:</p><div class="olist loweralpha"><ol class="loweralpha" type="a"><li><p>Choosing one climate variable and one RCP scenario, for example, precipitation (pr) with RCP2.6.</p></li><li><p>Performing the three exercises and presenting adequate results.</p></li><li><p>Submitting your presentation and the code you used to analyse the data and prepare the plots.</p></li></ol></div></li></ul></div><div class="imageblock"><img src="./images/Tree.png" alt="Tree" width="800"></div><div class="admonitionblock important"><table><tr><td class="icon"><i class="fa fa-exclamation-circle" title="Important"></i></td><td class="content">Be curious, let the internet be your friend!</td></tr></table></div></div></section><section id="_exercise_i_2"><h2>Exercise I</h2><div class="slide-content"><div class="olist arabic"><ol class="arabic"><li><p>Pick one scenario and variable for your group.</p></li><li><p>List all CSV files using <code>list.files.</code> Check the options <code>full.names</code> &amp; <code>pattern</code>.</p></li><li><p>Loop over the listed files and read them as data frames or time series.</p></li><li><p>Compare the different periods using statistical measurements (e.g., mean, median) and statistical tests (e.g., t.test)</p></li><li><p>Plot different types of plots to support your findings. For example, time series, boxplots, densities, etc</p></li><li><p>You may do some aggregation, e.g., monthly, seasonally, and annually</p></li><li><p>You can perform trend analysis or any time series analysis you would like.</p></li><li><p>You may convert the variables to common units such as Celsius or mm/day.</p></li></ol></div>
 <div class="admonitionblock important"><table><tr><td class="icon"><i class="fa fa-exclamation-circle" title="Important"></i></td><td class="content"><div class="title">Climate Variables:</div><div class="olist arabic"><ol class="arabic"><li><p>sfcWind &#8594; Surface wind [m/s]</p></li><li><p>pr &#8594; Precipitation [kg m-2 s-1]</p></li><li><p>tas &#8594; Surface temperature [k]</p></li></ol></div></td></tr></table></div></div></section><section id="_exercise_ii"><h2>Exercise II</h2><div class="slide-content"><div class="olist arabic"><ol class="arabic"><li><p>Use the same scenario and variable you opted in Exercise I.</p></li><li><p>Extract netCDF files content as arrays using terra.</p></li><li><p>Consider each pixel as a time series as in Exercise I and perform a similar analysis.</p></li><li><p>Plot your results as maps using <code>ggplot2</code></p><div class="olist loweralpha"><ol class="loweralpha" type="a"><li><p>You may add borders, rivers, and any features that complement your maps.</p></li></ol></div></li></ol></div></div></section><section id="_exercise_iii"><h2>Exercise III</h2><div class="slide-content"><div class="olist arabic"><ol class="arabic"><li><p>Use the same scenario and variable you opted in Exercise I  &amp; II.</p></li><li><p>Pick a location in the globe you want to present, knowing its longitude and latitude.</p></li><li><p>Read the netCDF files you choose using <code>terra</code> package and extract them as arrays.</p></li><li><p>Extract the vertical profiles for your locations and plot them, comparing the different periods.</p></li><li><p>You may want to calculate wind speed and direction from ua and va. + Don&#8217;t hesitate to do it!</p></li></ol></div>
 <div class="admonitionblock important"><table><tr><td class="icon"><i class="fa fa-exclamation-circle" title="Important"></i></td><td class="content"><div class="title">Climate Variables:</div><div class="olist arabic"><ol class="arabic"><li><p>hus&#8594; Specific humitidiy [g/kg]</p></li><li><p>ta&#8594; Temperature [k]</p></li><li><p>ua &amp; va &#8594; u and v wind componemnts [m/s]</p></li></ol></div></td></tr></table></div></div></section></section>
 <section id="_last_remarks"><h2>Last remarks</h2><div class="slide-content"><div class="ulist"><ul><li><p>There usually is more than one way to achieve similar results</p></li><li><p>What was shown here was just a short overview of what can<br>
 be done with spatial data</p><div class="ulist"><ul><li><p>Most of the functions in <em>QGIS</em> are available in R</p></li></ul></div></li><li><p>There are many more useful functions on <code>sf</code> to explore</p></li><li><p>There is much more to learn about <code>ggplot2</code> and <code>tidyverse</code></p></li><li><p>Hydrological analysis can be carried out with R</p><div class="ulist"><ul><li><p>Watershed delineation</p></li><li><p>Voronoi polygons</p></li><li><p>Extreme events distribution fit and analysis</p></li></ul></div></li></ul></div></div></section>
-<section id="_references_and_other_info"><h2>References and other info</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="ulist"><ul><li><p><a href="https://www.javatpoint.com/r-data-types">Data types</a></p></li><li><p><a href="https://swcarpentry.github.io/r-novice-inflammation/13-supp-data-structures/">Data structures in R</a></p></li><li><p><a href="https://resbaz.github.io/2014-r-materials/lessons/01-intro_r/data-structures.html">Data structures in R 2</a></p></li><li><p><a href="http://www.r-tutor.com/elementary-statistics">Elementary Statistics with R</a></p></li><li><p><a href="https://tpetzoldt.github.io/RBasics/">Dr. Thomas Petzoldt&#8217;s Rbasics (TU Dresden)</a></p></li><li><p><a href="https://learningstatisticswithr.com/book/">Statistics with R, book</a></p></li></ul></div></div></div>
+<section id="_references_and_other_info" class="columns is-vcentered"><h2>References and other info</h2><div class="slide-content"><div class="openblock column"><div class="content"><div class="ulist"><ul><li><p><a href="https://www.javatpoint.com/r-data-types">Data types</a></p></li><li><p><a href="https://swcarpentry.github.io/r-novice-inflammation/13-supp-data-structures/">Data structures in R</a></p></li><li><p><a href="https://resbaz.github.io/2014-r-materials/lessons/01-intro_r/data-structures.html">Data structures in R 2</a></p></li><li><p><a href="http://www.r-tutor.com/elementary-statistics">Elementary Statistics with R</a></p></li><li><p><a href="https://tpetzoldt.github.io/RBasics/">Dr. Thomas Petzoldt&#8217;s Rbasics (TU Dresden)</a></p></li><li><p><a href="https://learningstatisticswithr.com/book/">Statistics with R, book</a></p></li></ul></div></div></div>
 <div class="openblock column"><div class="content"><div class="ulist"><ul><li><p><a href="https://rstudio-pubs-static.s3.amazonaws.com/322396_ca6932a8cca04ee2b33d9cebdef8142b.html">Exploring the MPG dataset</a></p></li><li><p><a href="https://www.tidyverse.org/">Tidyverse</a></p></li><li><p><a href="https://www.r-bloggers.com/2021/04/tidyverse-in-r-complete-tutorial/">Tidyverse tutorial</a></p></li><li><p><a href="https://www.tutorialspoint.com/ggplot2/index.htm">ggplot2 tutorial</a></p></li><li><p><a href="https://www.oreilly.com/library/view/r-for-data/9781491910382/ch01.html">Data visualization with ggplot2</a></p></li><li><p><a href="http://sape.inf.usi.ch/quick-reference/ggplot2/colour">ggplot2 colors</a></p></li><li><p><a href="https://www.neonscience.org/resources/learning-hub/tutorials/raster-data-r">Raster data in R</a></p></li></ul></div></div></div>
 <div class="openblock column"><div class="content"><div class="ulist"><ul><li><p><a href="https://rspatial.org/raster/spatial/index.html">Rspatial</a></p></li><li><p><a href="https://www.jessesadler.com/post/gis-with-r-intro/">GIS with R</a></p></li><li><p><a href="https://vt-hydroinformatics.github.io/rgeowatersheds.html">Watershed delineation</a></p></li><li><p><a href="https://www.r-graph-gallery.com/line-chart-dual-Y-axis-ggplot2.html">Dual y-axis ggplot2</a></p></li><li><p><a href="https://www.rstudio.com/resources/cheatsheets/">Cheatsheets</a></p></li><li><p><a href="http://r-statistics.co/Time-Series-Analysis-With-R.html">Time series analysis</a></p></li><li><p><a href="https://www.statmethods.net/advstats/timeseries.html">Time series analysis 2</a></p></li><li><p><a href="https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/">Another ggplot tutorial</a></p></li></ul></div></div></div></div></section></div></div><script src="https://cdn.jsdelivr.net/npm/reveal.js@3.9.2/js/reveal.js"></script><script>Array.prototype.slice.call(document.querySelectorAll('.slides section')).forEach(function(slide) {
   if (slide.getAttribute('data-background-color')) return;

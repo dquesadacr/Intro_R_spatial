@@ -45,19 +45,26 @@ ncatt_get(ncin,"pr","long_name")
 ncatt_get(ncin,"pr","units")
  
 ncatt_get(ncin,"pr","_FillValue")
+
+# get dim
 dim(tmp_array)
-
-
+[1] 180  90   4
+# take one layer
 tmp_slice <- tmp_array[,,1]
 
 library(lattice)
 library(RColorBrewer)
-
 # quick map
 image(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
+# another option 
+library(fields)
+image.plot(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
 
+png("../images/ncdf4_plot_fields.png", width = 800,
+    height= 800, res = 150)
+image.plot(lon,lat,tmp_slice)
 
-
+dev.off()
 # terra -------------------------------------------------------------------
 library(terra)
 r<-rast(f)
@@ -67,28 +74,41 @@ r
 
 # convert units
 r<-r*86400
+r1<-r
+
+ext(r1)<-c(-180,180,-90,90)
+png("../images/netCDf_terra.png", width = 800,
+    height= 800, res = 150)
+plot(r)
+dev.off()
 
 plot(r[[1]])
 
+
+# convert to df
 r.df<-terra::as.data.frame(r, xy=T)
 
-r.array<-terra::as.array(r)
-
-animate(r)
 # change order of lon
 r.df$x<-ifelse(r.df$x>180, r.df$x -360, r.df$x)
+
+library(ggplot2)
 library(rnaturalearth)
 library(sf)
-spdf_world <- st_as_sf(ne_countries())
 
-plot(spdf_world)
-library(ggplot2)
+# to stay PC and avoid boarders issue
+spdf_world <- ne_coastline(returnclass = "sf")
+
 
 ggplot()+
-  geom_raster(r.df,mapping =  aes(x,y,fill=pr_1))+
-  geom_sf(spdf_world, mapping = aes(), fill=NA, color ="black")+
+  geom_raster(r.df,
+              mapping =  aes(x,y,
+                             fill=pr_1))+
+  geom_sf(spdf_world, 
+          mapping = aes(), 
+          fill=NA, color ="black")+
   
-  scale_fill_gradientn(colors = rev(brewer.pal(11,"RdBu")))+
+  scale_fill_viridis_c(begin = 0,
+                       end = 1)+
   theme_light(base_size = 8)
 
 

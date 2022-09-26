@@ -2584,10 +2584,10 @@ max value   :        13851.75
 [source,R]
 ----
 par(mfrow=c(1,3))
-raster::hist(de_dem, main="Distribution of elevation \n values",
+terra::hist(de_dem, main="Distribution of elevation \n values",
              breaks=40,maxpixels=1000000)
-raster::boxplot(de_dem, ylab= "Elevation", main = "Boxplot")
-raster::plot(de_dem, main = "Basic plot")
+terra::boxplot(de_dem, ylab= "Elevation", main = "Boxplot")
+terra::plot(de_dem, main = "Basic plot")
 ----
 
 [.columns.is-vcentered]
@@ -2823,7 +2823,7 @@ image::dem_kreis_ogr_terra.png[width=500]
 [source,R]
 ----
 kreis_sfT <- st_transform(kreis_sf,
-    sp::CRS(SRS_string = "EPSG:4326"))
+                        "EPSG:4326")
 
 plot(dem_repro, xlim = c(11.5,15.5),
      ylim=c(50,52))
@@ -2867,7 +2867,7 @@ kreis_sf == kreis_sf_2
 
 [.column]
 --
-* From `sp` with _base-R_
+* Using _base-R_ and `terra`
 
 [source,R]
 ----
@@ -3013,13 +3013,17 @@ image::lines_sf.png[height=575]
 * Easy to plot vectors when they are in `sf` format
 ** `geom_sf`
 
+//masked.spdf<- as(masked_dem_sn, "SpatialPixelsDataFrame") %>%
+//    as.data.frame() %>% rename(elev = deutschland_dgm)
+
 [source,R]
 ----
 cropped <- crop(dem_repro, kreis_sfT)
 masked_dem_sn <- mask(cropped, kreis_sfT)
 
-masked.spdf<- as(masked_dem_sn, "SpatialPixelsDataFrame") %>%
-    as.data.frame() %>% rename(elev = deutschland_dgm)
+masked.spdf<- terra::as.data.frame(masked_dem_sn,
+                                   xy =TRUE) %>% 
+  dplyr::rename(elev = deutschland_dgm)
 
 raster_gg <- ggplot(masked.spdf) +
     geom_tile(aes(fill=elev, x=x, y=y)) +
@@ -3090,8 +3094,17 @@ image::raster_gg_2.png[height=900]
 
 TIP: Always look for a data format that in compliance with the Resarch Data Managament of your instuite. For example, https://tu-dresden.de/tu-dresden/qualitaetsmanagement/ressourcen/dateien/wisprax/Leitlinien-fuer-den-Umgang-mit-Forschungsdaten-an-der-TU-Dresden.pdf?lang=en[Reserach Data Guidlines, TU Dresden] 
 
+[.columns]
 === NetCDF Structure
+[.column]
+[%step]
+* A netCDF file can contain multiple variables
+* Generally, the data is georeferenced
+* It (should) always contains metadata
 
+
+
+[.column]
 // inset environmental data here 
 image::netcdf-file-structure.png[height=800]
 
@@ -3117,7 +3130,7 @@ ncin<-nc_open(f)
 
 print(ncin)
 ----
-image::ncin_output.png[width=700]
+image::ncin_output.png[width=600, height=450]
 --
 
 [.column]
@@ -3148,10 +3161,121 @@ tmp_array <- ncvar_get(ncin,"pr")
 # convert to mm/day 
 tmp_array <-tmp_array*86400
 ----
+For you to try:
+[source,R]
+----
+ncatt_get(ncin,"pr","long_name")
+ncatt_get(ncin,"pr","units")
+ncatt_get(ncin,"pr","_FillValue")
+----
 //image::ncin_output.png[width=500]
 --
 
+[.columns]
+=== NetCDF and `ncdf4` package 
+
+[.column]
+--
+[source,R]
+----
+# get dim
+dim(tmp_array)
+[1] 180  90   4
+# take one layer
+tmp_slice <- tmp_array[,,1]
+
+library(lattice)
+library(RColorBrewer)
+# quick map
+image(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
+
+# another option 
+library(fields)
+image.plot(lon,lat,tmp_slice, col=rev(brewer.pal(10,"RdBu")))
+----
+--
+
+[.column]
+--
+* Generally, *NOT RECOMMENDED*
+
+image::ncdf4_plot_fields.png[width=800]
+
+--
+
+[.columns]
 === NetCDF and `terra` package 
+
+[.column]
+-- 
+. Easy and fast access to the netCDF data
+. Memory efficient compared to `ncdf4`
+. Ability of storing data on the disk (No RAM issues)
+
+[source,R]
+----
+library(terra)
+r<-rast(f)
+# meta data
+r
+class       : SpatRaster 
+dimensions  : 90, 180, 4  (nrow, ncol, nlyr)
+resolution  : 2, 2  (x, y)
+extent      : -1, 359, -90, 90  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source      : example.nc:pr 
+varname     : pr (Precipitation) 
+names       :       pr_1,       pr_2,       pr_3,       pr_4 
+unit        : kg m-2 s-1, kg m-2 s-1, kg m-2 s-1, kg m-2 s-1 
+time (days) : 1976-01-01 to 1976-01-04 
+
+# convert units
+r<-r*86400
+# check values 
+r
+# plot 
+plot(r)
+----
+--
+
+[.column]
+-- 
+image::netCDf_terra.png[width=800]
+-- 
+
+=== Plotting NetCDF using `ggplot2` package 
+
+[.column]
+-- 
+[source,R]
+----
+# convert to df
+r.df<-terra::as.data.frame(r, xy=T)
+
+# change order of lon
+r.df$x<-ifelse(r.df$x>180, r.df$x -360, r.df$x)
+
+library(ggplot2)
+library(rnaturalearth)
+library(sf)
+
+# to stay PC and avoid boarders issue
+spdf_world <- ne_coastline(returnclass = "sf")
+
+#plot
+ggplot()+
+  geom_raster(r.df,
+              mapping =  aes(x,y,
+                             fill=pr_1))+
+  geom_sf(spdf_world, 
+          mapping = aes(), 
+          fill=NA, color ="black")+
+  
+  scale_fill_viridis_c(begin = 0,
+                       end = 1)+
+  theme_light(base_size = 8)
+----
+--
 
 == General Info Regarding Excerises
 //[.col2]
@@ -3168,8 +3292,8 @@ tmp_array <-tmp_array*86400
 image::Tree.png[width=800]
 
 IMPORTANT: Be curious, let the internet be your friend!
-
 //[.columns.is-vcentered]
+
 === Exercise I
 . Pick one scenario and variable for your group. 
 . List all CSV files using `list.files.` Check the options `full.names` & `pattern`. 
@@ -3249,7 +3373,7 @@ be done with spatial data
 //IMPORTANT: Do something you feel pleased with! +
 //Be curious, let the internet be your friend!
 
-//[.columns.is-vcentered]
+[.columns.is-vcentered]
 == References and other info
 
 [.column]
