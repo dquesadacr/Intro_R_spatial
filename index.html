@@ -1908,8 +1908,9 @@ raster_gg &lt;- ggplot(masked.spdf) +
     theme_light(base_size = 11) +
     scale_fill_gradientn(colours = terrain.colors(12))</code></pre></div></div></div></section><section id="_previous_example"><h2>Previous example</h2><div class="slide-content"><div class="imageblock"><img src="./images/raster_gg.png" alt="raster gg" height="900"></div></div></section><section id="_another_example"><h2>Another example</h2><div class="slide-content"><div class="listingblock"><div class="content"><pre class="highlightjs highlight"><code class="language-R hljs" data-noescape="true" data-lang="R">library(ggspatial)
 
-masked.spdf.de &lt;- as(masked_dem, "SpatialPixelsDataFrame") %&gt;%
-    as.data.frame() %&gt;% rename(elev = deutschland_dgm)
+masked.spdf.de &lt;- terra::as.data.frame(masked_dem,
+                                   xy =TRUE) %&gt;%
+  dplyr::rename(elev = deutschland_dgm)
 
 world &lt;- ne_countries(scale = "medium", returnclass = "sf")
 bundes&lt;- ne_states(country="germany", returnclass = "sf")
@@ -2024,7 +2025,7 @@ spdf_world &lt;- ne_coastline(returnclass = "sf")
 
 #plot
 ggplot()+
-  geom_raster(r.df,
+  geom_raster(r.df, # better use geom_tile
               mapping =  aes(x,y,
                              fill=pr_1))+
   geom_sf(spdf_world,
