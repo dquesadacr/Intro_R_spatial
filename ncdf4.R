@@ -100,7 +100,7 @@ spdf_world <- ne_coastline(returnclass = "sf")
 
 
 ggplot()+
-  geom_raster(r.df,
+  geom_tile(r.df,
               mapping =  aes(x,y,
                              fill=pr_1))+
   geom_sf(spdf_world, 
@@ -109,7 +109,10 @@ ggplot()+
   
   scale_fill_viridis_c(begin = 0,
                        end = 1)+
-  theme_light(base_size = 8)
+  theme_light(base_size = 8) +
+  scale_x_continuous(limits = c(-180,180), 
+                     expand = c(0,0),
+                     breaks = seq(-180,180,10))
 
 
 

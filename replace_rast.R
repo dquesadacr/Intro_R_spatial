@@ -256,7 +256,7 @@ dev.off()
 library(sf)
 kreis_sf_2 <- st_as_sf(kreis_ogr)
 class(kreis_sf_2)
-kreis_sf <- read_sf("./spatial/kreis.gpkg")
+kreis_sf <- read_sf("kreis.gpkg")
 kreis_sf == kreis_sf_2
 
 # PDF slide 97------------------------------------------------------------
@@ -276,6 +276,35 @@ plot(kreis_ogrSub, add=TRUE)
 dev.off()
 
 
+
+# Slide 98 ----------------------------------------------------------------
+library(stringr)
+library(dplyr)
+kreis_sfSub <- kreis_sfT %>%
+  dplyr::filter(str_detect(KREIS, "Kreisfreie"))
+
+
+kreis_sfT <- st_transform(kreis_sf,
+                          "EPSG:4326")
+
+cropped <- crop(dem_repro, kreis_sfT)
+masked_dem_sn <- mask(cropped, kreis_sfT)
+
+masked.spdf<- terra::as.data.frame(masked_dem_sn,
+                                   xy =TRUE) %>% 
+  dplyr::rename(elev = deutschland_dgm)
+
+raster_gg <- ggplot(masked.spdf) +
+  geom_tile(aes(fill=elev, x=x, y=y)) +
+  geom_sf(data = kreis_sfT, fill=NA,
+          colour="black", size = 0.5) +
+  geom_sf_label(data = kreis_sfSub, aes(label=KREIS),
+                fill=NA, color= "red2", label.size = 0) +
+  coord_sf() +
+  labs(x=NULL, y=NULL, fill="m.a.s.l.",
+       title = "Raster with different vectors") +
+  theme_light(base_size = 11) +
+  scale_fill_gradientn(colours = terrain.colors(12))
 
 # vect --------------------------------------------------------------------
 

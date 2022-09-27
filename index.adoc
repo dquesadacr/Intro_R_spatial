@@ -3048,8 +3048,9 @@ image::raster_gg.png[height=900]
 ----
 library(ggspatial)
 
-masked.spdf.de <- as(masked_dem, "SpatialPixelsDataFrame") %>%
-    as.data.frame() %>% rename(elev = deutschland_dgm)
+masked.spdf.de <- terra::as.data.frame(masked_dem,
+                                   xy =TRUE) %>% 
+  dplyr::rename(elev = deutschland_dgm)
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 bundes<- ne_states(country="germany", returnclass = "sf")
@@ -3272,7 +3273,7 @@ spdf_world <- ne_coastline(returnclass = "sf")
 
 #plot
 ggplot()+
-  geom_raster(r.df,
+  geom_raster(r.df, # better use geom_tile
               mapping =  aes(x,y,
                              fill=pr_1))+
   geom_sf(spdf_world, 
